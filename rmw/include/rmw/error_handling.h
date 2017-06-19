@@ -29,6 +29,10 @@ extern "C"
 
 typedef rcutils_error_state_t rmw_error_state_t;
 
+#define rmw_error_state_copy rcutils_error_state_copy
+
+#define rmw_error_state_fini rcutils_error_state_fini
+
 // TODO(wjwwood): replace this completely with rcutils_set_error_state()
 //                once the rmw APIs take an allocator that can be passed
 //                by the rmw implementations on to the error functions
@@ -46,6 +50,9 @@ rmw_set_error_state(const char * error_msg, const char * file, size_t line_numbe
  * \see RCUTILS_SET_ERROR_MSG
  */
 #define RMW_SET_ERROR_MSG(msg) rmw_set_error_state(msg, __FILE__, __LINE__);
+
+#define RMW_SET_ERROR_MSG_ALLOC(msg, allocator) \
+  rcutils_set_error_state(msg, __FILE__, __LINE__, allocator);
 
 #define rmw_error_is_set rcutils_error_is_set
 
