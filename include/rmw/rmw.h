@@ -90,7 +90,11 @@ rmw_init(void);
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_node_t *
-rmw_create_node(const char * name, const char * namespace_, size_t domain_id);
+rmw_create_node(
+  const char * name,
+  const char * namespace_,
+  size_t domain_id,
+  const rmw_node_security_options_t * security_options);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -319,19 +323,6 @@ rmw_wait(
   rmw_clients_t * clients,
   rmw_waitset_t * waitset,
   const rmw_time_t * wait_timeout);
-
-RMW_PUBLIC
-RMW_WARN_UNUSED
-rmw_ret_t
-rmw_get_topic_names_and_types(
-  const rmw_node_t * node,
-  rmw_topic_names_and_types_t * topic_names_and_types);
-
-RMW_PUBLIC
-RMW_WARN_UNUSED
-rmw_ret_t
-rmw_destroy_topic_names_and_types(
-  rmw_topic_names_and_types_t * topic_names_and_types);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
