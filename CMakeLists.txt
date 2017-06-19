@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 
 project(rmw)
 
-if(NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
 endif()
 
 find_package(ament_cmake_ros REQUIRED)
@@ -16,8 +22,11 @@ include_directories(include)
 
 set(rmw_sources
   "src/allocators.c"
+  "src/convert_rcutils_ret_to_rmw_ret.c"
   "src/error_handling.c"
+  "src/names_and_types.c"
   "src/sanity_checks.c"
+  "src/node_security_options.c"
   "src/validate_full_topic_name.c"
   "src/validate_namespace.c"
   "src/validate_node_name.c"
