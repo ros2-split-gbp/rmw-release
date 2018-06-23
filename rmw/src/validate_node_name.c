@@ -28,10 +28,23 @@ rmw_validate_node_name(
   if (!node_name) {
     return RMW_RET_INVALID_ARGUMENT;
   }
+  return rmw_validate_node_name_with_size(
+    node_name, strlen(node_name), validation_result, invalid_index);
+}
+
+rmw_ret_t
+rmw_validate_node_name_with_size(
+  const char * node_name,
+  size_t node_name_length,
+  int * validation_result,
+  size_t * invalid_index)
+{
+  if (!node_name) {
+    return RMW_RET_INVALID_ARGUMENT;
+  }
   if (!validation_result) {
     return RMW_RET_INVALID_ARGUMENT;
   }
-  size_t node_name_length = strlen(node_name);
   if (node_name_length == 0) {
     *validation_result = RMW_NODE_NAME_INVALID_IS_EMPTY_STRING;
     if (invalid_index) {
@@ -93,6 +106,6 @@ rmw_node_name_validation_result_string(int validation_result)
       return
         "node name length should not exceed '" RMW_STRINGIFY(RMW_NODE_NAME_MAX_NAME_LENGTH) "'";
     default:
-      return NULL;
+      return "unknown result code for rmw node name validation";
   }
 }
