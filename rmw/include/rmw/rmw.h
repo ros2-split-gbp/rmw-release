@@ -100,6 +100,23 @@ RMW_WARN_UNUSED
 const char *
 rmw_get_implementation_identifier(void);
 
+/// Get the unique serialization format for this middleware.
+/**
+ * Return the format in which binary data is serialized.
+ * One middleware can only have one encoding.
+ * In contrast to the implementation identifier, the serialization format can be equal between
+ * multiple RMW implementations.
+ * This means, that the same binary messages can be deserialized by RMW implementations with the
+ * same format.
+ * \sa rmw_serialize
+ * \sa rmw_deserialize
+ * \return serialization format
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+const char *
+rmw_get_serialization_format(void);
+
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -296,6 +313,7 @@ rmw_take_serialized_message(
  * \param subscription subscription object to take from
  * \param serialized_message the destination in which to store the serialized message
  * \param taken boolean flag indicating if a message was taken or not
+ * \param message_info a structure containing meta information about the taken message
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
@@ -451,12 +469,40 @@ rmw_wait(
   rmw_wait_set_t * wait_set,
   const rmw_time_t * wait_timeout);
 
+/// Return a list of node name and namespaces discovered via a node.
+/**
+ * This function will return a list of node names and a list of node namespaces
+ * that are discovered via the middleware.
+ * The two lists represent pairs of namespace and name for each discovered
+ * node.
+ * The lists will be the same length and the same position will refer to the
+ * same node across lists.
+ *
+ * The node parameter must not be `NULL`, and must point to a valid node.
+ *
+ * The node_names parameter must not be `NULL`, and must point to a valid
+ * string array.
+ *
+ * The node_namespaces parameter must not be `NULL`, and must point to a
+ * valid string array.
+ *
+ * This function does manipulate heap memory.
+ * This function is not thread-safe.
+ * This function is lock-free.
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[out] node_names a list of discovered node names
+ * \param[out] node_namespaces a list of discovered node namespaces
+ * \return `RMW_RET_OK` if node the query was made successfully, or
+ * \return `RMW_RET_ERROR` if an unspecified error occurs.
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_get_node_names(
   const rmw_node_t * node,
-  rcutils_string_array_t * node_names);
+  rcutils_string_array_t * node_names,
+  rcutils_string_array_t * node_namespaces);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
