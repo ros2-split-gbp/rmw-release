@@ -1,3 +1,28 @@
+## rmw (crystal) - 0.6.1-0
+
+The packages in the `rmw` repository were released into the `crystal` distro by running `/usr/bin/bloom-release --rosdistro crystal --track crystal rmw --override-release-repository-push-url git@github.com:ros2-gbp/rmw-release.git` on `Fri, 07 Dec 2018 03:22:20 -0000`
+
+These packages were released:
+- `rmw`
+- `rmw_implementation_cmake`
+
+Version of package(s) in repository `rmw`:
+
+- upstream repository: https://github.com/ros2/rmw.git
+- release repository: https://github.com/ros2-gbp/rmw-release.git
+- rosdistro version: `0.6.0-0`
+- old version: `0.6.0-0`
+- new version: `0.6.1-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.9`
+- catkin_pkg version: `0.4.9`
+- rosdep version: `0.13.0`
+- rosdistro version: `0.7.0`
+- vcstools version: `0.1.40`
+
+
 ## rmw (crystal) - 0.6.0-0
 
 The packages in the `rmw` repository were released into the `crystal` distro by running `/usr/bin/bloom-release -r crystal -n rmw --override-release-repository-push-url git@github.com:ros2-gbp/rmw-release` on `Fri, 16 Nov 2018 16:54:11 -0000`
