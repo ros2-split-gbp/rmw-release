@@ -251,6 +251,32 @@ rmw_publisher_count_matched_subscriptions(
   const rmw_publisher_t * publisher,
   size_t * subscription_count);
 
+/// Retrieve the actual qos settings of the publisher.
+/**
+ * Query the underlying middleware to determine the qos settings
+ * of the publisher.
+ * The actual configuration applied when using RMW_*_SYSTEM_DEFAULT
+ * can only be resolved after the creation of the publisher, and it
+ * depends on the underlying rmw implementation.
+ * If the underlying setting in use can't be represented in ROS terms,
+ * it will be set to RMW_*_UNKNOWN.
+ * The value of avoid_ros_namespace_conventions field is not resolved
+ * with this function. The rcl function rcl_publisher_get_actual_qos
+ * resolves it.
+ *
+ * \param[in] publisher the publisher object to inspect
+ * \param[out] qos the actual qos settings
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if either argument is null, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_publisher_get_actual_qos(
+  const rmw_publisher_t * publisher,
+  rmw_qos_profile_t * qos);
+
 /// Publish an already serialized message.
 /**
  * The publisher must already be registered with the correct message type
@@ -521,10 +547,18 @@ rmw_trigger_guard_condition(const rmw_guard_condition_t * guard_condition);
 
 /// Create a wait set to store conditions that the middleware will block on.
 /**
+ * This function can fail, and therefore return `NULL`, if:
+ *   - context is `NULL`
+ *   - context is invalid
+ *   - memory allocation fails during wait set creation
+ *   - an unspecified error occurs
+ *
  * If `max_conditions` is `0`, the wait set can store an unbounded number of
  * conditions to wait on.
  * If `max_conditions` is greater than `0`, the number of conditions that can
  * be attached to the wait set is bounded at `max_conditions`.
+ *
+ * \param[in] context init context that this node should be associated with
  * \param[in] max_conditions
  *   The maximum number of conditions that can be attached to the wait set.
  * \return A pointer to the created wait set, `NULL` if an error occurred.
@@ -532,7 +566,7 @@ rmw_trigger_guard_condition(const rmw_guard_condition_t * guard_condition);
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_wait_set_t *
-rmw_create_wait_set(size_t max_conditions);
+rmw_create_wait_set(rmw_context_t * context, size_t max_conditions);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED

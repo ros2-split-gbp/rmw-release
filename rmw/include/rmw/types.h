@@ -175,26 +175,31 @@ enum RMW_PUBLIC_TYPE rmw_qos_reliability_policy_t
 {
   RMW_QOS_POLICY_RELIABILITY_SYSTEM_DEFAULT,
   RMW_QOS_POLICY_RELIABILITY_RELIABLE,
-  RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT
+  RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
+  RMW_QOS_POLICY_RELIABILITY_UNKNOWN
 };
 
 enum RMW_PUBLIC_TYPE rmw_qos_history_policy_t
 {
   RMW_QOS_POLICY_HISTORY_SYSTEM_DEFAULT,
   RMW_QOS_POLICY_HISTORY_KEEP_LAST,
-  RMW_QOS_POLICY_HISTORY_KEEP_ALL
+  RMW_QOS_POLICY_HISTORY_KEEP_ALL,
+  RMW_QOS_POLICY_HISTORY_UNKNOWN
 };
 
 enum RMW_PUBLIC_TYPE rmw_qos_durability_policy_t
 {
   RMW_QOS_POLICY_DURABILITY_SYSTEM_DEFAULT,
   RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL,
-  RMW_QOS_POLICY_DURABILITY_VOLATILE
+  RMW_QOS_POLICY_DURABILITY_VOLATILE,
+  RMW_QOS_POLICY_DURABILITY_UNKNOWN
 };
 
+/// ROS MiddleWare quality of service profile.
 typedef struct RMW_PUBLIC_TYPE rmw_qos_profile_t
 {
   enum rmw_qos_history_policy_t history;
+  /// Size of the message queue.
   size_t depth;
   enum rmw_qos_reliability_policy_t reliability;
   enum rmw_qos_durability_policy_t durability;
@@ -228,7 +233,7 @@ enum {RMW_QOS_POLICY_DEPTH_SYSTEM_DEFAULT = 0};
 
 // Type mapping of rcutils log severity types to
 // rmw specific types.
-typedef enum RWM_PUBLIC_TYPE
+typedef enum RMW_PUBLIC_TYPE
 {
   RMW_LOG_SEVERITY_DEBUG = RCUTILS_LOG_SEVERITY_DEBUG,
   RMW_LOG_SEVERITY_INFO = RCUTILS_LOG_SEVERITY_INFO,
