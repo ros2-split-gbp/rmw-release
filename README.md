@@ -1,3 +1,28 @@
+## rmw (dashing) - 0.7.0-1
+
+The packages in the `rmw` repository were released into the `dashing` distro by running `/usr/bin/bloom-release -n -r dashing rmw --override-release-repository-push-url git@github.com:ros2-gbp/rmw-release` on `Sat, 13 Apr 2019 18:27:53 -0000`
+
+These packages were released:
+- `rmw`
+- `rmw_implementation_cmake`
+
+Version of package(s) in repository `rmw`:
+
+- upstream repository: https://github.com/ros2/rmw.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `0.7.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.8.0`
+- catkin_pkg version: `0.4.11`
+- rosdep version: `0.15.1`
+- rosdistro version: `0.7.3`
+- vcstools version: `0.1.40`
+
+
 ## rmw (crystal) - 0.6.1-0
 
 The packages in the `rmw` repository were released into the `crystal` distro by running `/usr/bin/bloom-release --rosdistro crystal --track crystal rmw --override-release-repository-push-url git@github.com:ros2-gbp/rmw-release.git` on `Fri, 07 Dec 2018 03:22:20 -0000`
