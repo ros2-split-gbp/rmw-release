@@ -1,0 +1,62 @@
+ros-dashing-rmw (0.7.1-1bionic) bionic; urgency=high
+
+  * Implement QoS: liveliness, deadline, lifespan (#171 <https://github.com/ros2/rmw/issues/171>)
+  * Rmw preallocate (#160 <https://github.com/ros2/rmw/issues/160>)
+  * Add new QoS policy data types to rmw (#173 <https://github.com/ros2/rmw/issues/173>)
+  * Contributors: M. M, Michael Carroll, Ross Desmond
+
+ -- Dirk Thomas <dthomas@osrfoundation.org>  Wed, 08 May 2019 05:00:00 -0000
+
+ros-dashing-rmw (0.7.0-1bionic) bionic; urgency=high
+
+  * Add function to get publisher actual qos settings (#169 <https://github.com/ros2/rmw/issues/169>)
+  * fix checking boolean variable which might contain a string (#165 <https://github.com/ros2/rmw/issues/165>)
+  * change parameter events to use KEEP_LAST (#162 <https://github.com/ros2/rmw/issues/162>)
+  * Fix typo error (#164 <https://github.com/ros2/rmw/issues/164>)
+  * pass context to wait set, and provide fini function for context (#163 <https://github.com/ros2/rmw/issues/163>)
+  * minor notes explaining rmw_qos_profile_t (#156 <https://github.com/ros2/rmw/issues/156>)
+  * Contributors: Dirk Thomas, Lalit Begani, Mike Lautman, William Woodall, ivanpauno
+
+ -- Dirk Thomas <dthomas@osrfoundation.org>  Sat, 13 Apr 2019 05:00:00 -0000
+
+ros-dashing-rmw (0.6.1-1bionic) bionic; urgency=high
+
+  * Add node graph functions (#158 <https://github.com/ros2/rmw/issues/158>)
+  * refactor init to allow options to be passed and to not be global (#154 <https://github.com/ros2/rmw/issues/154>)
+  * Methods to retrieve matched counts on publisher and subscriber (#155 <https://github.com/ros2/rmw/issues/155>)
+  * use uint8_t instead of char for serialized message (#161 <https://github.com/ros2/rmw/issues/161>)
+  * Contributors: Karsten Knese, Michael Carroll, Ross Desmond, William Woodall
+
+ -- Dirk Thomas <dthomas@osrfoundation.org>  Thu, 06 Dec 2018 06:00:00 -0000
+
+ros-dashing-rmw (0.6.0-1bionic) bionic; urgency=high
+
+  * use new error handling API (#153 <https://github.com/ros2/rmw/issues/153>)
+  * Add semicolons to RCLCPP and RCUTILS macros. (#150 <https://github.com/ros2/rmw/issues/150>)
+  * Include node namespaces in get_node_names() (#148 <https://github.com/ros2/rmw/issues/148>)
+  * add missing doc for parameter (#149 <https://github.com/ros2/rmw/issues/149>)
+  * rcutils_serialized_message -> rcutils_char_array (#146 <https://github.com/ros2/rmw/issues/146>)
+  * rmw serialized to rcutils serialized (#145 <https://github.com/ros2/rmw/issues/145>)
+  * rcutil -> rcutils (#147 <https://github.com/ros2/rmw/issues/147>)
+  * get serialization format (#143 <https://github.com/ros2/rmw/issues/143>)
+  * Contributors: Chris Lalancette, Karsten Knese, Michael Carroll, Mikael Arguedas, William Woodall
+
+ -- Dirk Thomas <dthomas@osrfoundation.org>  Fri, 16 Nov 2018 06:00:00 -0000
+
+ros-dashing-rmw (0.5.0-1bionic) bionic; urgency=high
+
+  * use rcutils allocator in allocators.c to avoid direct use of malloc/free (#140 <https://github.com/ros2/rmw/issues/140>)
+  * check the return value of rcutils_snprintf (#138 <https://github.com/ros2/rmw/issues/138>)
+  * _raw function (#125 <https://github.com/ros2/rmw/issues/125>)
+  * Merge pull request #137 <https://github.com/ros2/rmw/issues/137> from ros2/misra_fixup
+  * Change #if to #ifdef.
+  * add function to parse key-value user_data (#132 <https://github.com/ros2/rmw/issues/132>)
+  * Add validation functions accepting string length (#135 <https://github.com/ros2/rmw/issues/135>)
+  * Clarify that NULL blocks forever in rmw_wait (#134 <https://github.com/ros2/rmw/issues/134>)
+  * Enable setting log levels in DDS implementation (#124 <https://github.com/ros2/rmw/issues/124>)
+  * Optimize namespace node and topic validation (#130 <https://github.com/ros2/rmw/issues/130>)
+  * Contributors: Dirk Thomas, Ethan Gao, Karsten Knese, Michael Carroll, Shane Loretz, Sriram Raghunathan, William Woodall
+
+ -- Dirk Thomas <dthomas@osrfoundation.org>  Sat, 23 Jun 2018 05:00:00 -0000
+
+
