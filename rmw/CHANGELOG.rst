@@ -2,10 +2,13 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.7.2 (2019-06-12)
+0.8.0 (2019-09-24)
 ------------------
-* add RMW_QOS_POLICY_LIVELINESS_UNKNOWN enum (`#175 <https://github.com/ros2/rmw/issues/175>`_)
-* Contributors: M. M
+* Added specific return type for non existent node (`#182 <https://github.com/ros2/rmw/issues/182>`_)
+* Added function for getting clients by node (`#179 <https://github.com/ros2/rmw/issues/179>`_)
+* Added get_actual_qos() feature to subscriptions (`#177 <https://github.com/ros2/rmw/issues/177>`_)
+* Added ``RMW_QOS_POLICY_LIVELINESS_UNKNOWN`` enum (`#175 <https://github.com/ros2/rmw/issues/175>`_)
+* Contributors: Jacob Perron, M. M, ivanpauno
 
 0.7.1 (2019-05-08)
 ------------------
