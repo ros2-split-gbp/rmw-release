@@ -1,3 +1,28 @@
+## rmw (eloquent) - 0.8.0-1
+
+The packages in the `rmw` repository were released into the `eloquent` distro by running `/usr/local/bin/bloom-release -r eloquent -t eloquent rmw` on `Wed, 25 Sep 2019 01:54:30 -0000`
+
+These packages were released:
+- `rmw`
+- `rmw_implementation_cmake`
+
+Version of package(s) in repository `rmw`:
+
+- upstream repository: https://github.com/ros2/rmw.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `0.8.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.8.0`
+- catkin_pkg version: `0.4.13`
+- rosdep version: `0.15.1`
+- rosdistro version: `0.7.2`
+- vcstools version: `0.1.42`
+
+
 ## rmw (dashing) - 0.7.2-1
 
 The packages in the `rmw` repository were released into the `dashing` distro by running `/usr/bin/bloom-release --rosdistro dashing --track dashing rmw` on `Wed, 12 Jun 2019 20:17:34 -0000`
