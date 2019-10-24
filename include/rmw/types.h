@@ -28,6 +28,7 @@ extern "C"
 #include <rcutils/logging.h>
 
 #include "rmw/init.h"
+#include "rmw/loaned_message_sequence.h"
 #include "rmw/ret_types.h"
 #include "rmw/serialized_message.h"
 #include "rmw/visibility_control.h"
@@ -45,18 +46,84 @@ typedef struct RMW_PUBLIC_TYPE rmw_node_t
   rmw_context_t * context;
 } rmw_node_t;
 
+/// Options that can be used to configure the creation of a publisher in rmw.
+typedef struct RMW_PUBLIC_TYPE rmw_publisher_options_t
+{
+  /// Used to pass rmw implementation specific resources during publisher creation.
+  /**
+   * This field is type erased (rather than forward declared) because it will
+   * usually be a non-owned reference to an language specific object, e.g.
+   * C++ it may be a polymorphic class that only the rmw implementation can use.
+   *
+   * The resource pointed to here needs to outlive this options structure, and
+   * any rmw_publisher objects that are created using it, as they copy this
+   * structure and may use this payload throughout their lifetime.
+   */
+  void * rmw_specific_publisher_payload;
+} rmw_publisher_options_t;
+
 typedef struct RMW_PUBLIC_TYPE rmw_publisher_t
 {
   const char * implementation_identifier;
   void * data;
   const char * topic_name;
+  /// Publisher options.
+  /**
+   * The options structure passed to rmw_create_publisher() should be
+   * assigned to this field by the rmw implementation.
+   * The fields should not be modified after creation, but
+   * the contents of the options structure may or may not be const, i.e.
+   * shallow const-ness.
+   * This field is not marked const to avoid any const casting during setup.
+   */
+  rmw_publisher_options_t options;
+  bool can_loan_messages;
 } rmw_publisher_t;
+
+/// Options that can be used to configure the creation of a subscription in rmw.
+typedef struct RMW_PUBLIC_TYPE rmw_subscription_options_t
+{
+  /// Used to pass rmw implementation specific resources during subscription creation.
+  /**
+   * All the same details and restrictions of this field in
+   * rmw_publisher_options_t apply to this struct as well.
+   *
+   * \sa rmw_publisher_options_t.rmw_specific_publisher_payload
+   */
+  void * rmw_specific_subscription_payload;
+
+  /// If true then the middleware should not deliver data from local publishers.
+  /**
+   * This setting is most often used when data should only be received from
+   * remote nodes, especially to avoid "double delivery" when both intra- and
+   * inter- process communication is taking place.
+   *
+   * \TODO(wjwwood): nail this down when participant mapping is sorted out.
+   *   See: https://github.com/ros2/design/pull/250
+   *
+   * The definition of local is somewhat vague at the moment.
+   * Right now it means local to the node, and that definition works best, but
+   * may become more complicated when/if participants map to a context instead.
+   */
+  bool ignore_local_publications;
+} rmw_subscription_options_t;
 
 typedef struct RMW_PUBLIC_TYPE rmw_subscription_t
 {
   const char * implementation_identifier;
   void * data;
   const char * topic_name;
+  /// Subscription options.
+  /**
+   * The options structure passed to rmw_create_subscription() should be
+   * assigned to this field by the rmw implementation.
+   * The fields should not be modified after creation, but
+   * the contents of the options structure may or may not be const, i.e.
+   * shallow const-ness.
+   * This field is not marked const to avoid any const casting during setup.
+   */
+  rmw_subscription_options_t options;
+  bool can_loan_messages;
 } rmw_subscription_t;
 
 typedef struct RMW_PUBLIC_TYPE rmw_service_t
@@ -272,6 +339,13 @@ typedef struct RMW_PUBLIC_TYPE rmw_message_info_t
   rmw_gid_t publisher_gid;
   bool from_intra_process;
 } rmw_message_info_t;
+
+typedef struct RMW_PUBLIC_TYPE rmw_message_info_sequence_t
+{
+  rmw_message_info_t * message_info_sequence;
+  size_t size;
+  size_t capacity;
+} rmw_message_info_sequence_t;
 
 enum {RMW_QOS_POLICY_DEPTH_SYSTEM_DEFAULT = 0};
 
