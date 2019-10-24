@@ -96,6 +96,7 @@ extern "C"
 #include "rmw/init.h"
 #include "rmw/macros.h"
 #include "rmw/qos_profiles.h"
+#include "rmw/subscription_options.h"
 #include "rmw/types.h"
 #include "rmw/visibility_control.h"
 
@@ -159,6 +160,8 @@ rmw_get_serialization_format(void);
  * \param[in] namespace_ the node namespace
  * \param[in] domain_id the id of the domain that the node should join
  * \param[in] security_options the security configurations for the node
+ * \param[in] localhost_only whenever to use loopback only for communication or default
+ * network interfaces.
  * \return rmw node handle or `NULL` if there was an error
  */
 RMW_PUBLIC
@@ -169,7 +172,8 @@ rmw_create_node(
   const char * name,
   const char * namespace_,
   size_t domain_id,
-  const rmw_node_security_options_t * security_options);
+  const rmw_node_security_options_t * security_options,
+  bool localhost_only);
 
 /// Finalize a given node handle, reclaim the resources, and deallocate the node handle.
 /**
@@ -279,6 +283,21 @@ rmw_ret_t
 rmw_fini_publisher_allocation(
   rmw_publisher_allocation_t * allocation);
 
+/// Return a rmw_publisher_options_t initialized with default values.
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_publisher_options_t
+rmw_get_default_publisher_options(void);
+
+/// Create and return an rmw publisher.
+/**
+ * \TODO(wjwwood): add detailed documentation, adding a not about one of the
+ *   arguments for now.
+ *
+ * The argument `publisher_options` must not be nullptr.
+ *
+ * \param[in] publisher_options options for configuring the publisher
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_publisher_t *
@@ -286,12 +305,58 @@ rmw_create_publisher(
   const rmw_node_t * node,
   const rosidl_message_type_support_t * type_support,
   const char * topic_name,
-  const rmw_qos_profile_t * qos_policies);
+  const rmw_qos_profile_t * qos_policies,
+  const rmw_publisher_options_t * publisher_options);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_destroy_publisher(rmw_node_t * node, rmw_publisher_t * publisher);
+
+/// Borrow a loaned message.
+/**
+ * The memory allocated for the ros message belongs to the middleware and must not be deallocated.
+ * A call to \sa rmw_publish_loned_message as well as \sa rmw_return_loaned_message_from_publisher`
+ * will return ownership of the loaned message back to the middleware.
+ *
+ * In order to react to failures, the ros message is passed by pointer as an output parameter.
+ * Therefore, the pointer to the ros message has to be `null` and not previously allocated or
+ * else that memory is lost.
+ *
+ * \param[in] publisher Publisher to which the allocated message is associated.
+ * \param[in] type_support Typesupport to which the internal ros message is allocated.
+ * \param[out] ros_message The pointer to be filled with a valid ros message by the middleware.
+ * \return RMW_RET_OK if the ros message was correctly initialized, or
+ * \return RMW_RET_INVALID_ARGUMENT if an argument other than the ros message is null, or
+ * \return RMW_RET_BAD_ALLOC if the ros message could not be correctly created, or
+ * \return RMW_RET_ERROR if an unexpected error occured.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_borrow_loaned_message(
+  const rmw_publisher_t * publisher,
+  const rosidl_message_type_support_t * type_support,
+  void ** ros_message);
+
+/// Return a loaned message previously borrow from a publisher.
+/**
+ * The ownership of the passed in ros message will be transferred back to the middleware.
+ * The middleware might deallocate and destroy the message so that the pointer is no longer
+ * guaranteed to be valid after this call.
+ *
+ * \param[in] publisher Publisher to which the loaned message is associated.
+ * \param[in] loaned_message Loaned message to be returned.
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if an argument is null, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs and no message can be initialized.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_return_loaned_message_from_publisher(
+  const rmw_publisher_t * publisher,
+  void * loaned_message);
 
 /// Publish a given ros_message
 /**
@@ -310,6 +375,32 @@ rmw_ret_t
 rmw_publish(
   const rmw_publisher_t * publisher,
   const void * ros_message,
+  rmw_publisher_allocation_t * allocation);
+
+/// Publish a loaned ros_message.
+/**
+ * Publish a loaned ROS message via a publisher and return ownership of the loaned message
+ * back to the middleware.
+ *
+ * In contrast to \sa `rmw_publish` the ownership of the ros message is being transferred to the
+ * middleware which might deallocate the memory for it.
+ * Similar to \sa `rmw_return_loaned_message_from_publisher` the passed in ros message might
+ * not be valid after this call and thus should only be called with messages previously loaned with
+ * a call to \sa `rmw_borrow_loaned_message`.
+ *
+ * \param[in] publisher Publisher to be used to send message.
+ * \param[in] ros_message Message to be sent.
+ * \param[in] allocation Specify preallocated memory to use (may be NULL).
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if publisher or ros_message is null, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_publish_loaned_message(
+  const rmw_publisher_t * publisher,
+  void * ros_message,
   rmw_publisher_allocation_t * allocation);
 
 /// Retrieve the number of matched subscriptions to a publisher.
@@ -506,6 +597,15 @@ rmw_ret_t
 rmw_fini_subscription_allocation(
   rmw_subscription_allocation_t * allocation);
 
+/// Create and return an rmw subscription.
+/**
+ * \TODO(wjwwood): add detailed documentation, adding a not about one of the
+ *   arguments for now.
+ *
+ * The argument `subscription_options` must not be nullptr.
+ *
+ * \param[in] subscription_options options for configuring the subscription
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_subscription_t *
@@ -514,7 +614,7 @@ rmw_create_subscription(
   const rosidl_message_type_support_t * type_support,
   const char * topic_name,
   const rmw_qos_profile_t * qos_policies,
-  bool ignore_local_publications);
+  const rmw_subscription_options_t * subscription_options);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -656,6 +756,72 @@ rmw_take_serialized_message_with_info(
   bool * taken,
   rmw_message_info_t * message_info,
   rmw_subscription_allocation_t * allocation);
+
+/// Take a loaned message.
+/**
+ * If capable, the middleware can loan messages containing incoming messages.
+ * The message is owned by the middleware and thus has to be returned
+ * with a call to \sa rmw_return_loaned_message_from_subscription.
+ *
+ * \param[in] subscription Subscription object to take from.
+ * \param[inout] loaned_message The destination in which to store the loaned message.
+ * \param[out] taken Boolean flag indicating if a message was taken or not.
+ * \param[in] allocation Preallocated buffer to use (may be NULL).
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_take_loaned_message(
+  const rmw_subscription_t * subscription,
+  void ** loaned_message,
+  bool * taken,
+  rmw_subscription_allocation_t * allocation);
+
+/// Take a loaned message and with its additional message information.
+/**
+ * If capable, the middleware can loan messages containing incoming messages.
+ * The message is owned by the middleware and thus has to be returned
+ * with a call to \sa rmw_release_loaned_message.
+ *
+ * \param[in] subscription Subscription object to take from.
+ * \param[inout] loaned_message The destination in which to store the loaned message.
+ * \param[out] taken Boolean flag indicating if a message was taken or not.
+ * \param[out] message_info A structure containing meta information about the taken message.
+ * \param[in] allocation Preallocated buffer to use (may be NULL).
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_take_loaned_message_with_info(
+  const rmw_subscription_t * subscription,
+  void ** loaned_message,
+  bool * taken,
+  rmw_message_info_t * message_info,
+  rmw_subscription_allocation_t * allocation);
+
+/// Return a loaned message previously taken from a subscription.
+/**
+ * After the taking a loaned message from the middleware, the middleware has to keep the memory
+ * for the loaned message alive and valid as long as the user is working with that loan.
+ * In order to indicate that the loaned message is no longer needed, the call to
+ * \sa rmw_return_loaned_message_from_subscription tells the middleware that memory can be
+ * deallocated/destroyed.
+ *
+ * \param[in] subscription The subscription instance which loaned the message.
+ * \param[in] loaned_message The message to be released.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_return_loaned_message_from_subscription(
+  const rmw_subscription_t * subscription,
+  void * loaned_message);
 
 RMW_PUBLIC
 RMW_WARN_UNUSED
