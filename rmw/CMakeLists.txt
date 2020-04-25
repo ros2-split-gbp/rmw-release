@@ -19,10 +19,9 @@ endif()
 find_package(ament_cmake_ros REQUIRED)
 
 find_package(rcutils REQUIRED)
+find_package(rosidl_runtime_c REQUIRED)
 
 include(cmake/configure_rmw_library.cmake)
-
-include_directories(include)
 
 set(rmw_sources
   "src/allocators.c"
@@ -30,29 +29,37 @@ set(rmw_sources
   "src/event.c"
   "src/init.c"
   "src/init_options.c"
-  "src/loaned_message_sequence.c"
+  "src/message_sequence.c"
   "src/names_and_types.c"
   "src/publisher_options.c"
   "src/sanity_checks.c"
+  "src/security_options.c"
   "src/subscription_options.c"
-  "src/node_security_options.c"
+  "src/topic_endpoint_info_array.c"
+  "src/topic_endpoint_info.c"
+  "src/types.c"
   "src/validate_full_topic_name.c"
   "src/validate_namespace.c"
   "src/validate_node_name.c"
 )
 set_source_files_properties(${rmw_sources} PROPERTIES LANGUAGE "C")
 add_library(${PROJECT_NAME} ${rmw_sources})
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 ament_target_dependencies(${PROJECT_NAME}
   "rcutils"
+  "rosidl_runtime_c"
 )
 configure_rmw_library(${PROJECT_NAME} LANGUAGE "C")
 
 ament_export_dependencies(
   rcutils
-  rosidl_generator_c
+  rosidl_runtime_c
 )
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
+ament_export_targets(${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -61,7 +68,7 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-ament_export_development_version_if_higher_than_manifest("0.8.1-dev")
+ament_export_development_version_if_higher_than_manifest("0.8.2-dev")
 ament_package(CONFIG_EXTRAS "rmw-extras.cmake")
 
 install(
@@ -73,7 +80,7 @@ install(
   DESTINATION include
 )
 install(
-  TARGETS ${PROJECT_NAME}
+  TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

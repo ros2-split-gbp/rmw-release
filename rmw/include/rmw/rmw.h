@@ -55,6 +55,7 @@
  *   - rmw_get_service_names_and_types()
  *   - rmw/names_and_types.h
  *   - rmw/get_topic_names_and_types.h
+ *   - rmw/get_topic_endpoint_info.h
  *   - rmw/get_service_names_and_types.h
  *
  * Further still there are some useful abstractions and utilities:
@@ -89,17 +90,22 @@ extern "C"
 
 #include "rcutils/types.h"
 
-#include "rosidl_generator_c/message_bounds_struct.h"
-#include "rosidl_generator_c/message_type_support_struct.h"
-#include "rosidl_generator_c/service_type_support_struct.h"
+#include "rosidl_runtime_c/message_type_support_struct.h"
+#include "rosidl_runtime_c/service_type_support_struct.h"
+#include "rosidl_runtime_c/sequence_bound.h"
 
 #include "rmw/init.h"
 #include "rmw/macros.h"
 #include "rmw/qos_profiles.h"
 #include "rmw/subscription_options.h"
+#include "rmw/message_sequence.h"
 #include "rmw/types.h"
 #include "rmw/visibility_control.h"
 
+/// Get the name of the rmw implementation being used
+/**
+ * \return Name of rmw implementation
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 const char *
@@ -172,12 +178,17 @@ rmw_create_node(
   const char * name,
   const char * namespace_,
   size_t domain_id,
-  const rmw_node_security_options_t * security_options,
   bool localhost_only);
 
 /// Finalize a given node handle, reclaim the resources, and deallocate the node handle.
 /**
- * \param node the node handle to be destroyed
+ * The method may assume - but should verify - that all publishers, subscribers,
+ * services, and clients created from this node have already been destroyed.
+ * If the rmw implementation chooses to verify instead of assume, it should
+ * return `RMW_RET_ERROR` and set a human readable error message if any entity
+ * created from this node has not yet been destroyed.
+ *
+ * \param[in] node the node handle to be destroyed
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_INVALID_ARGUMENT` if node is null, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
@@ -265,7 +276,7 @@ RMW_WARN_UNUSED
 rmw_ret_t
 rmw_init_publisher_allocation(
   const rosidl_message_type_support_t * type_support,
-  const rosidl_message_bounds_t * message_bounds,
+  const rosidl_runtime_c__Sequence__bound * message_bounds,
   rmw_publisher_allocation_t * allocation);
 
 /// Destroy a publisher allocation object.
@@ -326,10 +337,11 @@ rmw_destroy_publisher(rmw_node_t * node, rmw_publisher_t * publisher);
  * \param[in] publisher Publisher to which the allocated message is associated.
  * \param[in] type_support Typesupport to which the internal ros message is allocated.
  * \param[out] ros_message The pointer to be filled with a valid ros message by the middleware.
- * \return RMW_RET_OK if the ros message was correctly initialized, or
- * \return RMW_RET_INVALID_ARGUMENT if an argument other than the ros message is null, or
- * \return RMW_RET_BAD_ALLOC if the ros message could not be correctly created, or
- * \return RMW_RET_ERROR if an unexpected error occured.
+ * \return `RMW_RET_OK` if the ros message was correctly initialized, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if an argument other than the ros message is null, or
+ * \return `RMW_RET_BAD_ALLOC` if the ros message could not be correctly created, or
+ * \return `RMW_RET_UNSUPPORTED` if the rmw_implementation does not support loaned_message, or
+ * \return `RMW_RET_ERROR` if an unexpected error occured.
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -349,6 +361,7 @@ rmw_borrow_loaned_message(
  * \param[in] loaned_message Loaned message to be returned.
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_INVALID_ARGUMENT` if an argument is null, or
+ * \return `RMW_RET_UNSUPPORTED` if the rmw_implementation does not support loaned_message, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs and no message can be initialized.
  */
 RMW_PUBLIC
@@ -393,6 +406,7 @@ rmw_publish(
  * \param[in] allocation Specify preallocated memory to use (may be NULL).
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_INVALID_ARGUMENT` if publisher or ros_message is null, or
+ * \return `RMW_RET_UNSUPPORTED` if the rmw_implementation does not support loaned_message, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
  */
 RMW_PUBLIC
@@ -485,7 +499,7 @@ RMW_WARN_UNUSED
 rmw_ret_t
 rmw_get_serialized_message_size(
   const rosidl_message_type_support_t * type_support,
-  const rosidl_message_bounds_t * message_bounds,
+  const rosidl_runtime_c__Sequence__bound * message_bounds,
   size_t * size);
 
 /// Manually assert that this Publisher is alive (for RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC)
@@ -518,9 +532,9 @@ rmw_publisher_assert_liveliness(const rmw_publisher_t * publisher);
  * rmw_serialized_message_t structure.
  * The serialization format depends on the underlying middleware.
  *
- * \param ros_message the typed ROS message
- * \param type_support the typesupport for the ROS message
- * \param serialized_message the destination for the serialize ROS message
+ * \param[in] ros_message the typed ROS message
+ * \param[in] type_support the typesupport for the ROS message
+ * \param[out] serialized_message the destination for the serialize ROS message
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
@@ -542,9 +556,9 @@ rmw_serialize(
  * The serialization format expected in the rmw_serialized_message_t depends on the
  * underlying middleware.
  *
- * \param serialized_message the serialized message holding the byte stream
- * \param type_support the typesupport for the typed ros message
- * \param ros_message destination for the deserialized ROS message
+ * \param[in] serialized_message the serialized message holding the byte stream
+ * \param[in] type_support the typesupport for the typed ros message
+ * \param[out] ros_message destination for the deserialized ROS message
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
@@ -579,7 +593,7 @@ RMW_WARN_UNUSED
 rmw_ret_t
 rmw_init_subscription_allocation(
   const rosidl_message_type_support_t * type_support,
-  const rosidl_message_bounds_t * message_bounds,
+  const rosidl_runtime_c__Sequence__bound * message_bounds,
   rmw_subscription_allocation_t * allocation);
 
 /// Destroy a publisher allocation object.
@@ -707,6 +721,44 @@ rmw_take_with_info(
   rmw_message_info_t * message_info,
   rmw_subscription_allocation_t * allocation);
 
+/// Take multiple incoming messages from a subscription with additional metadata.
+/**
+ * Take a sequence of ROS messgages from a given subscription.
+ *
+ * While `count` messages may be requested, fewer messages may be available on the subscription.
+ * In this case, only the currently available messages will be returned.
+ * The `taken` flag indicates the number of messages actually taken.
+ * The method will return `RMW_RET_OK` even in the case that fewer (or zero) messages were retrieved.
+ * from the subscription, and will `RMW_RET_ERROR` in the case of unexpected errors.
+ * In the case that `count` is zero, the function will return `RMW_RET_INVALID_ARGUMENT`.
+ *
+ * `message_sequence` and `message_info_sequence` should be initialized and have sufficient capacity.
+ * It is not critical that the sequence sizes match, and they may be reused from previous calls.
+ * Both must be valid (not NULL) for the method to run successfully.
+ *
+ * \param[in] subscription The subscription object to take from.
+ * \param[in] count Number of messages to attempt to take.
+ * \param[out] message_sequence The sequence of ROS message data on success.
+ * \param[out] message_info_sequence The sequence of additional message metadata on success.
+ * \param[out] taken Number of messages actually taken from subscription.
+ * \param[in] allocation Preallocated buffer to use (may be NULL).
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if an argument is invalid, or
+ * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
+ * \return `RMW_RET_INCORRECT_RMW_IMPLEMENTATION` if the rmw implementation does not match, or
+ * \return `RMW_RET_ERROR` if an unexpected error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_take_sequence(
+  const rmw_subscription_t * subscription,
+  size_t count,
+  rmw_message_sequence_t * message_sequence,
+  rmw_message_info_sequence_t * message_info_sequence,
+  size_t * taken,
+  rmw_subscription_allocation_t * allocation);
+
 /// Take a message without deserializing it.
 /**
  * The message is taken in its serialized form. In contrast to rmw_take, the message
@@ -769,6 +821,7 @@ rmw_take_serialized_message_with_info(
  * \param[in] allocation Preallocated buffer to use (may be NULL).
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
+ * \return `RMW_RET_UNSUPPORTED` if the rmw_implementation does not support loaned_message, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
  */
 RMW_PUBLIC
@@ -793,6 +846,7 @@ rmw_take_loaned_message(
  * \param[in] allocation Preallocated buffer to use (may be NULL).
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
+ * \return `RMW_RET_UNSUPPORTED` if the rmw_implementation does not support loaned_message, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
  */
 RMW_PUBLIC
@@ -823,6 +877,14 @@ rmw_return_loaned_message_from_subscription(
   const rmw_subscription_t * subscription,
   void * loaned_message);
 
+/// Create an rmw client to communicate with the specified service
+/**
+ * \param[in] node Handle to node with which to register this client
+ * \param[in] type_support The type_support of this rosidl service
+ * \param[in] service_name The name of the ROS 2 service to connect with
+ * \param[in] qos_policies The QoS profile policies to utilize for this connection
+ * \return The initialized client if successful, `nullptr` if not
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_client_t *
@@ -832,11 +894,24 @@ rmw_create_client(
   const char * service_name,
   const rmw_qos_profile_t * qos_policies);
 
+/// Destroy and unregister a service client
+/**
+ * \param[in] node The associated node whose client will be destroyed
+ * \param[in] client The service client to destroy
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_destroy_client(rmw_node_t * node, rmw_client_t * client);
 
+/// Send a service request to the rmw server
+/**
+ * \param[in] client The connected client over which to send this request
+ * \param[in] ros_request the request message to send to the server
+ * \param[out] sequence_id A unique identification value to identify this request
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -845,15 +920,31 @@ rmw_send_request(
   const void * ros_request,
   int64_t * sequence_id);
 
+/// Attempt to get the response from a service request
+/**
+ * \param[in] client The connected client to check on this request
+ * \param[out] request_header Header response information
+ * \param[out] ros_response The response of this service request,
+ * \param[out] taken True if the response was taken, false otherwise
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_take_response(
   const rmw_client_t * client,
-  rmw_request_id_t * request_header,
+  rmw_service_info_t * request_header,
   void * ros_response,
   bool * taken);
 
+/// Create an rmw service server that responds to requests
+/**
+ * \param[in] node The node that responds the service requests
+ * \param[in] type_support The type support description of this service
+ * \param[in] service_name The name of this service advertised across the ROS graph
+ * \param[in] qos_policies The QoS profile policies to utilize for connections
+ * \return The created service object if successful, otherwise a nullptr
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_service_t *
@@ -863,20 +954,41 @@ rmw_create_service(
   const char * service_name,
   const rmw_qos_profile_t * qos_policies);
 
+/// Destroy and unregister the service from this node
+/**
+ * \param[in] node The node that owns the service that is being destroyed
+ * \param[in] service Pointer to the service type created in `rmw_create_service`
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_destroy_service(rmw_node_t * node, rmw_service_t * service);
 
+/// Attempt to take a request from this service's request buffer
+/**
+ * \param[in] service service object that responds to these requests
+ * \param[out] request_header Request information header with writer guid and sequence number
+ * \param[out] ros_request The deserialized ros_request, and is unmodified if there are no requests
+ * \param[out] taken true if the request was taken, otherwise false
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_take_request(
   const rmw_service_t * service,
-  rmw_request_id_t * request_header,
+  rmw_service_info_t * request_header,
   void * ros_request,
   bool * taken);
 
+/// Send response to a client's request
+/**
+ * \param[in] service The service that responding to this request
+ * \param[in] request_header The request header obtained when this request was taken
+ * \param[in] ros_response The response message to send to the client
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -916,10 +1028,9 @@ RMW_WARN_UNUSED
 rmw_guard_condition_t *
 rmw_create_guard_condition(rmw_context_t * context);
 
-
 /// Finalize a given guard condition handle, reclaim the resources, and deallocate the handle.
 /**
- * \param guard_condition the guard condition handle to be destroyed
+ * \param[in] guard_condition the guard condition handle to be destroyed
  * \return `RMW_RET_OK` if successful, or
  * \return `RMW_RET_INVALID_ARGUMENT` if guard_condition is null, or
  * \return `RMW_RET_ERROR` if an unexpected error occurs.
@@ -957,6 +1068,11 @@ RMW_WARN_UNUSED
 rmw_wait_set_t *
 rmw_create_wait_set(rmw_context_t * context, size_t max_conditions);
 
+/// Destroy and free memory of this wait_set
+/**
+ * \param[in] wait_set The wait_set object to destroy
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -982,12 +1098,12 @@ rmw_destroy_wait_set(rmw_wait_set_t * wait_set);
  * After the wait wakes up, the entries in each array that correspond to
  * conditions that were not triggered are set to `NULL`.
  *
- * \param subscriptions Array of subscriptions to wait on
- * \param guard_conditions Array of guard conditions to wait on
- * \param services Array of services to wait on
- * \param clients Array of clients to wait on
- * \param wait_set Storage for the wait set
- * \param wait_timeout
+ * \param[in] subscriptions Array of subscriptions to wait on
+ * \param[in] guard_conditions Array of guard conditions to wait on
+ * \param[in] services Array of services to wait on
+ * \param[in] clients Array of clients to wait on
+ * \param[in] wait_set Storage for the wait set
+ * \param[in] wait_timeout
  *   If NULL, block until a condition is ready.
  *   If zero, check only for immediately available conditions and don't block.
  *   Else, this represents the maximum time to wait for a response from the
@@ -1043,6 +1159,33 @@ rmw_get_node_names(
   rcutils_string_array_t * node_names,
   rcutils_string_array_t * node_namespaces);
 
+/// Return a list of node name and namespaces discovered via a node with its enclave.
+/**
+ * Similar to \ref rmw_get_node_names, but it also provides the enclave name.
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[out] node_names a list of discovered node names
+ * \param[out] node_namespaces a list of discovered node namespaces
+ * \param[out] enclaves list of discovered nodes' enclave names
+ * \return `RMW_RET_OK` if node the query was made successfully, or
+ * \return `RMW_RET_ERROR` if an unspecified error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_get_node_names_with_enclaves(
+  const rmw_node_t * node,
+  rcutils_string_array_t * node_names,
+  rcutils_string_array_t * node_namespaces,
+  rcutils_string_array_t * enclaves);
+
+/// Count the number of publishers matching a topic name
+/**
+* \param[in] node rmw node connected to the ROS graph
+* \param[in] topic_name The name of the topic to match under possible prefixes
+* \param[out] count The number of publishers matching the topic name
+* \return RMW_RET_OK if successful, otherwise an appropriate error code
+*/
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -1051,6 +1194,13 @@ rmw_count_publishers(
   const char * topic_name,
   size_t * count);
 
+/// Count the number of subscribers matching a topic name
+/**
+ * \param[in] node rmw node connected to the ROS graph
+ * \param[in] topic_name The name of the topic to match under possible prefixes
+ * \param[out] count The number of subscribers matching the topic name
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -1059,11 +1209,24 @@ rmw_count_subscribers(
   const char * topic_name,
   size_t * count);
 
+/// Get the unique identifier of the publisher
+/**
+ * \param[in] publisher The publisher to get the gid of
+ * \param[out] gid The resulting gid
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
 rmw_get_gid_for_publisher(const rmw_publisher_t * publisher, rmw_gid_t * gid);
 
+/// Check if two gid objects are the same
+/**
+ * \param[in] gid1 One gid1 to compare
+ * \param[in] gid2 The other gid to compare
+ * \param[out] bool true if the gid objects match, false otherwise
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t
@@ -1104,6 +1267,11 @@ rmw_service_server_is_available(
   const rmw_client_t * client,
   bool * is_available);
 
+/// Set the current log severity
+/**
+ * \param[in] severity The log severity to set
+ * \return RMW_RET_OK if successful, otherwise an appropriate error code
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t

@@ -1,4 +1,4 @@
-// Copyright 2017 Open Source Robotics Foundation, Inc.
+// Copyright 2020 Robert Bosch GmbH. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rmw/node_security_options.h"
+#include "rmw/types.h"
 
-rmw_node_security_options_t
-rmw_get_zero_initialized_node_security_options()
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_message_info_t
+rmw_get_zero_initialized_message_info(void)
 {
-  static rmw_node_security_options_t null_security_options = {0, NULL};
-  return null_security_options;
-}
-
-rmw_node_security_options_t
-rmw_get_default_node_security_options()
-{
-  static rmw_node_security_options_t default_options;
-  default_options.enforce_security = RMW_SECURITY_ENFORCEMENT_PERMISSIVE;
-  default_options.security_root_path = NULL;
-  return default_options;
+  rmw_message_info_t zero_initialized_message_info = {0, 0, {NULL, {0}}, false};
+  return zero_initialized_message_info;
 }

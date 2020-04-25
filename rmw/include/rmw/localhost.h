@@ -12,33 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RMW__LOANED_MESSAGE_SEQUENCE_H_
-#define RMW__LOANED_MESSAGE_SEQUENCE_H_
+#ifndef RMW__LOCALHOST_H_
+#define RMW__LOCALHOST_H_
 
-#include <stddef.h>
-
-#include "rmw/macros.h"
 #include "rmw/visibility_control.h"
 
-#if __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct RMW_PUBLIC_TYPE rmw_loaned_message_sequence_t
+/// Used to specify if the context can only communicate through localhost.
+typedef enum RMW_PUBLIC_TYPE rmw_localhost_only_t
 {
-  void * message_sequence;
-  size_t size;
-  size_t capacity;
-} rmw_loaned_message_sequence_t;
+  /// Uses ROS_LOCALHOST_ONLY environment variable.
+  RMW_LOCALHOST_ONLY_DEFAULT = 0,
+  /// Forces using only localhost.
+  RMW_LOCALHOST_ONLY_ENABLED = 1,
+  /// Forces disabling localhost only.
+  RMW_LOCALHOST_ONLY_DISABLED = 2,
+} rmw_localhost_only_t;
 
-RMW_PUBLIC
-RMW_WARN_UNUSED
-rmw_loaned_message_sequence_t
-rmw_get_zero_initialized_loaned_message_sequence(void);
-
-#if __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
-#endif  // RMW__LOANED_MESSAGE_SEQUENCE_H_
+#endif  // RMW__LOCALHOST_H_

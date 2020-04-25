@@ -12,16 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rmw/loaned_message_sequence.h"
+#ifndef RMW__DOMAIN_ID_H_
+#define RMW__DOMAIN_ID_H_
 
-rmw_loaned_message_sequence_t
-rmw_get_zero_initialized_loaned_message_sequence(void)
-{
-  static rmw_loaned_message_sequence_t loaned_message_sequence = {
-    .message_sequence = NULL,
-    .size = 0u,
-    .capacity = 0u
-  };
+/// Default domain id.
+#define RMW_DEFAULT_DOMAIN_ID SIZE_MAX
 
-  return loaned_message_sequence;
-}
+#endif  // RMW__DOMAIN_ID_H_
