@@ -1,3 +1,28 @@
+## rmw (foxy) - 1.0.1-1
+
+The packages in the `rmw` repository were released into the `foxy` distro by running `/usr/bin/bloom-release -r foxy rmw` on `Tue, 19 May 2020 21:30:30 -0000`
+
+These packages were released:
+- `rmw`
+- `rmw_implementation_cmake`
+
+Version of package(s) in repository `rmw`:
+
+- upstream repository: https://github.com/ros2/rmw.git
+- release repository: https://github.com/ros2-gbp/rmw-release.git
+- rosdistro version: `1.0.0-1`
+- old version: `1.0.0-1`
+- new version: `1.0.1-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.7`
+- catkin_pkg version: `0.4.20`
+- rosdep version: `0.19.0`
+- rosdistro version: `0.8.1`
+- vcstools version: `0.1.42`
+
+
 ## rmw (foxy) - 1.0.0-1
 
 The packages in the `rmw` repository were released into the `foxy` distro by running `/usr/bin/bloom-release -r foxy rmw` on `Tue, 12 May 2020 20:38:54 -0000`
