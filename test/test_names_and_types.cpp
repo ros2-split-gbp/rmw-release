@@ -13,23 +13,12 @@
 // limitations under the License.
 
 #include "gmock/gmock.h"
+#include "osrf_testing_tools_cpp/scope_exit.hpp"
 
+#include "./time_bomb_allocator_testing_utils.h"
 #include "rcutils/error_handling.h"
 #include "rmw/error_handling.h"
 #include "rmw/names_and_types.h"
-
-namespace
-{
-void *
-bad_zero_allocator(size_t number, size_t size, void * state)
-{
-  RCUTILS_UNUSED(number);
-  RCUTILS_UNUSED(size);
-  RCUTILS_UNUSED(state);
-  return nullptr;
-}
-}  // namespace
-
 
 TEST(rmw_names_and_types, get_zero_init)
 {
@@ -92,22 +81,45 @@ TEST(rmw_names_and_types, rmw_names_and_types_init) {
   rmw_reset_error();
 
   // allocator fails to allocate memory to names
-  allocator.zero_allocate = &bad_zero_allocator;
-  result = rmw_names_and_types_init(&names_and_types, size, &allocator);
+  rcutils_allocator_t failing_allocator = get_time_bomb_allocator();
+  set_time_bomb_allocator_calloc_count(failing_allocator, 0);
+  result = rmw_names_and_types_init(&names_and_types, size, &failing_allocator);
   EXPECT_EQ(result, RMW_RET_BAD_ALLOC);
-  allocator = rcutils_get_default_allocator();
   rmw_reset_error();
 
-  // Fails to deallocate after failing to zero allocate types
-  allocator.zero_allocate = &bad_zero_allocator;
-  allocator.deallocate = nullptr;
-  result = rmw_names_and_types_init(&names_and_types, size, &allocator);
+  // allocator fails to allocate memory to types
+  set_time_bomb_allocator_calloc_count(failing_allocator, 1);
+  result = rmw_names_and_types_init(&names_and_types, size, &failing_allocator);
   EXPECT_EQ(result, RMW_RET_BAD_ALLOC);
-  allocator = rcutils_get_default_allocator();
   rmw_reset_error();
+
+  // Fails to deallocate names after failing to zero allocate types
+  set_time_bomb_allocator_calloc_count(failing_allocator, 1);
+  failing_allocator.deallocate = nullptr;
+
+  // Logging is initialized during this code path and would need to be shutdown.
+  ASSERT_EQ(rcutils_logging_initialize(), RCUTILS_RET_OK);
+  OSRF_TESTING_TOOLS_CPP_SCOPE_EXIT(
+  {
+    // If logging shutdown is not called, there's a small memory leak
+    EXPECT_EQ(rcutils_logging_shutdown(), RCUTILS_RET_OK);
+  });
+  result = rmw_names_and_types_init(&names_and_types, size, &failing_allocator);
+  EXPECT_EQ(result, RMW_RET_BAD_ALLOC);
+  rmw_reset_error();
+
+  // Needs to properly clean up names before the next several inits
+  names_and_types.names.allocator = rcutils_get_default_allocator();
+  ASSERT_EQ(rcutils_string_array_fini(&names_and_types.names), RMW_RET_OK);
+
+  // Size == 0 is Ok
+  result = rmw_names_and_types_init(&names_and_types, 0, &allocator);
+  EXPECT_EQ(result, RMW_RET_OK);
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
 
   result = rmw_names_and_types_init(&names_and_types, size, &allocator);
   EXPECT_EQ(result, RMW_RET_OK);
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
 }
 
 TEST(rmw_names_and_types, rmw_names_and_types_fini) {
@@ -115,25 +127,49 @@ TEST(rmw_names_and_types, rmw_names_and_types_fini) {
   rcutils_allocator_t allocator = rcutils_get_default_allocator();
   size_t size = 100;
 
+  // Zero-initialized is Ok
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
+
   rmw_ret_t result = rmw_names_and_types_init(&names_and_types, size, &allocator);
   EXPECT_EQ(result, RMW_RET_OK);
+
+  // Ok
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
+  result = rmw_names_and_types_init(&names_and_types, size, &allocator);
+  ASSERT_EQ(result, RMW_RET_OK);
 
   // names_and_types is nullptr
   EXPECT_EQ(rmw_names_and_types_fini(nullptr), RMW_RET_INVALID_ARGUMENT);
   rmw_reset_error();
 
-  // Ok
-  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
-
   // Size != 0 and types is null
   auto types_ptr = names_and_types.types;
   names_and_types.types = nullptr;
-  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_INVALID_ARGUMENT);
-  rmw_reset_error();
-  names_and_types.types = types_ptr;
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
+  result = rcutils_string_array_init(&names_and_types.names, size, &allocator);
+  ASSERT_EQ(result, RCUTILS_RET_OK);
 
-  // bad allocator, rcutils fails to finalize string array
+  // bad 'names' allocator, rcutils fails to finalize string array
+  names_and_types.types = nullptr;
+  names_and_types.names.size = 0u;
   names_and_types.names.allocator.deallocate = nullptr;
   EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_INVALID_ARGUMENT);
   rmw_reset_error();
+
+  // bad 'types' allocator, rcutils fails to finalize string array
+  names_and_types.types = types_ptr;
+  names_and_types.names.size = size;
+  names_and_types.names.allocator = allocator;
+  result = rcutils_string_array_init(&names_and_types.types[0], 1, &allocator);
+  ASSERT_EQ(result, RCUTILS_RET_OK);
+  names_and_types.types[0].allocator.deallocate = nullptr;
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_INVALID_ARGUMENT);
+  rmw_reset_error();
+
+  // Restore back to nominal for proper finalizing
+  names_and_types.types = types_ptr;
+  names_and_types.names.size = size;
+  names_and_types.names.allocator = allocator;
+  names_and_types.types[0].allocator = allocator;
+  EXPECT_EQ(rmw_names_and_types_fini(&names_and_types), RMW_RET_OK);
 }
