@@ -2,6 +2,9 @@
 Changelog for package rmw_implementation_cmake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.0 (2020-06-18)
+------------------
+
 1.0.1 (2020-05-19)
 ------------------
 * Update Quality Declaration to reflect 1.0 (`#228 <https://github.com/ros2/rmw/issues/228>`_)
