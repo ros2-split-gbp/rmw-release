@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RMW__INCOMPATIBLE_QOS_EVENTS_STATUSES_H_
-#define RMW__INCOMPATIBLE_QOS_EVENTS_STATUSES_H_
+#include "gmock/gmock.h"
+#include "rmw/types.h"
 
-#include "rmw/events_statuses/incompatible_qos.h"
+TEST(test_types, zero_initialized_message_info) {
+  rmw_message_info_t info = rmw_get_zero_initialized_message_info();
+  EXPECT_EQ(0u, info.source_timestamp);
+  EXPECT_EQ(0u, info.received_timestamp);
+  EXPECT_EQ(nullptr, info.publisher_gid.implementation_identifier);
+  for (size_t i = 0; i < RMW_GID_STORAGE_SIZE; ++i) {
+    EXPECT_EQ(0u, info.publisher_gid.data[i]);
+  }
 
-#endif  // RMW__INCOMPATIBLE_QOS_EVENTS_STATUSES_H_
+  EXPECT_FALSE(info.from_intra_process);
+}
