@@ -100,6 +100,7 @@ ament_add_gmock(test_serialized_message
 )
 if(TARGET test_serialized_message)
   target_link_libraries(test_serialized_message ${PROJECT_NAME})
+  target_link_libraries(test_serialized_message osrf_testing_tools_cpp::memory_tools)
 endif()
 
 ament_add_gmock(test_subscription_options
@@ -145,7 +146,7 @@ ament_add_gmock(test_validate_namespace
 )
 if(TARGET test_validate_namespace)
   target_link_libraries(test_validate_namespace ${PROJECT_NAME})
-  if(UNIX AND NOT APPLE)
+  if(UNIX AND NOT APPLE AND NOT ANDROID)
     target_link_libraries(test_validate_namespace pthread)
   endif()
   if(NOT WIN32)
