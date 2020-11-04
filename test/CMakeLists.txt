@@ -75,6 +75,15 @@ if(TARGET test_publisher_options)
   target_link_libraries(test_publisher_options ${PROJECT_NAME})
 endif()
 
+ament_add_gtest(test_qos_string_conversions
+test_qos_string_conversions.cpp
+  # Append the directory of librmw so it is found at test time.
+  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+)
+if(TARGET test_qos_string_conversions)
+  target_link_libraries(test_qos_string_conversions ${PROJECT_NAME})
+endif()
+
 ament_add_gmock(test_sanity_checks
   test_sanity_checks.cpp
   # Append the directory of librmw so it is found at test time.
@@ -100,6 +109,7 @@ ament_add_gmock(test_serialized_message
 )
 if(TARGET test_serialized_message)
   target_link_libraries(test_serialized_message ${PROJECT_NAME})
+  target_link_libraries(test_serialized_message osrf_testing_tools_cpp::memory_tools)
 endif()
 
 ament_add_gmock(test_subscription_options
@@ -145,7 +155,7 @@ ament_add_gmock(test_validate_namespace
 )
 if(TARGET test_validate_namespace)
   target_link_libraries(test_validate_namespace ${PROJECT_NAME})
-  if(UNIX AND NOT APPLE)
+  if(UNIX AND NOT APPLE AND NOT ANDROID)
     target_link_libraries(test_validate_namespace pthread)
   endif()
   if(NOT WIN32)
