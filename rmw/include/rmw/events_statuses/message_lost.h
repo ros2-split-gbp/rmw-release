@@ -1,4 +1,4 @@
-// Copyright 2018 Open Source Robotics Foundation, Inc.
+// Copyright 2020 Open Source Robotics Foundation, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef RMW__EVENTS_STATUSES__MESSAGE_LOST_H_
+#define RMW__EVENTS_STATUSES__MESSAGE_LOST_H_
+
 #include <stddef.h>
 
-#include "rmw/domain_id.h"
-#include "rmw/init.h"
-#include "rmw/init_options.h"
+#include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-rmw_context_t
-rmw_get_zero_initialized_context(void)
+typedef struct RMW_PUBLIC_TYPE rmw_message_lost_status_t
 {
-  return (const rmw_context_t) {
-           .instance_id = 0,
-           .implementation_identifier = NULL,
-           .options = rmw_get_zero_initialized_init_options(),
-           .actual_domain_id = 0u,
-           .impl = NULL
-  };  // NOLINT(readability/braces): false positive
-}
+  /// Total number of messages lost.
+  size_t total_count;
+  /// Number of messages lost since last callback.
+  size_t total_count_change;
+} rmw_message_lost_status_t;
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // RMW__EVENTS_STATUSES__MESSAGE_LOST_H_

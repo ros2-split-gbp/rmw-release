@@ -32,6 +32,7 @@ set(rmw_sources
   "src/message_sequence.c"
   "src/names_and_types.c"
   "src/publisher_options.c"
+  "src/qos_string_conversions.c"
   "src/sanity_checks.c"
   "src/security_options.c"
   "src/subscription_options.c"
@@ -76,7 +77,7 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-ament_export_development_version_if_higher_than_manifest("0.8.2-dev")
+ament_export_development_version_if_higher_than_manifest("1.1.1-dev")
 ament_package(CONFIG_EXTRAS "rmw-extras.cmake")
 
 install(
