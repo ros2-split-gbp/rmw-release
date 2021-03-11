@@ -2,6 +2,9 @@
 Changelog for package rmw_implementation_cmake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.0 (2021-03-11)
+------------------
+
 3.1.0 (2021-02-25)
 ------------------
 * Shorten some excessively long lines of CMake (`#300 <https://github.com/ros2/rmw/issues/300>`_)
