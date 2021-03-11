@@ -2,6 +2,11 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.0 (2021-03-11)
+------------------
+* Introduce RMW_DURATION_INFINITE constant and API return value promise (`#301 <https://github.com/ros2/rmw/issues/301>`_)
+* Contributors: Emerson Knapp
+
 3.1.0 (2021-02-25)
 ------------------
 * Add declaration for function to check QoS profile compatibility (`#299 <https://github.com/ros2/rmw/issues/299>`_)
