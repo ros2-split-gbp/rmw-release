@@ -2,40 +2,10 @@
 Changelog for package rmw_implementation_cmake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-3.3.0 (2021-04-06)
+1.0.3 (2021-04-14)
 ------------------
-
-3.2.0 (2021-03-11)
-------------------
-
-3.1.0 (2021-02-25)
-------------------
-* Shorten some excessively long lines of CMake (`#300 <https://github.com/ros2/rmw/issues/300>`_)
-* Contributors: Scott K Logan
-
-3.0.0 (2021-01-25)
-------------------
-* Change default RMW vendor to CycloneDDS. (`#293 <https://github.com/ros2/rmw/issues/293>`_)
-* Contributors: Chris Lalancette
-
-2.2.1 (2020-12-10)
-------------------
-* Update rmw QD to QL 1 (`#289 <https://github.com/ros2/rmw/issues/289>`_)
+* Update QD to QL 1 (`#291 <https://github.com/ros2/rmw/issues/291>`_)
 * Contributors: Stephen Brawner
-
-2.2.0 (2020-11-04)
-------------------
-* Update maintainers (`#282 <https://github.com/ros2/rmw/issues/282>`_)
-* Contributors: Ivan Santiago Paunovic
-
-2.1.0 (2020-07-22)
-------------------
-
-2.0.0 (2020-07-08)
-------------------
-
-1.1.0 (2020-06-18)
-------------------
 
 1.0.1 (2020-05-19)
 ------------------
