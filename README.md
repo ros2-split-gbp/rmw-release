@@ -1,3 +1,28 @@
+## rmw (galactic) - 3.3.1-1
+
+The packages in the `rmw` repository were released into the `galactic` distro by running `/usr/bin/bloom-release --rosdistro galactic --track galactic rmw` on `Mon, 26 Apr 2021 20:53:37 -0000`
+
+These packages were released:
+- `rmw`
+- `rmw_implementation_cmake`
+
+Version of package(s) in repository `rmw`:
+
+- upstream repository: https://github.com/ros2/rmw.git
+- release repository: https://github.com/ros2-gbp/rmw-release.git
+- rosdistro version: `3.3.0-2`
+- old version: `3.3.0-2`
+- new version: `3.3.1-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.23`
+- rosdep version: `0.20.1`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## rmw (rolling) - 3.3.1-1
 
 The packages in the `rmw` repository were released into the `rolling` distro by running `/usr/bin/bloom-release --rosdistro rolling --track rolling rmw` on `Mon, 26 Apr 2021 20:50:38 -0000`
