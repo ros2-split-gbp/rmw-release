@@ -2,6 +2,11 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+4.0.0 (2021-06-02)
+------------------
+* Add rmw_publisher_wait_for_all_acked support. (`#296 <https://github.com/ros2/rmw/issues/296>`_)
+* Contributors: Barry Xu
+
 3.3.1 (2021-04-26)
 ------------------
 * Document which QoS policies are correctly read by rmw_get_publishers/subscriptions_info_by_topic (`#308 <https://github.com/ros2/rmw/issues/308>`_)
