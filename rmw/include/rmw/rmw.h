@@ -2973,6 +2973,42 @@ RMW_WARN_UNUSED
 rmw_ret_t
 rmw_get_gid_for_publisher(const rmw_publisher_t * publisher, rmw_gid_t * gid);
 
+/// Get the unique identifier (gid) of a service client.
+/**
+ * <hr>
+ * Attribute          | Adherence
+ * ------------------ | -------------
+ * Allocates Memory   | No
+ * Thread-Safe        | Yes
+ * Uses Atomics       | Maybe [1]
+ * Lock-Free          | Maybe [1]
+ *
+ * <i>[1] implementation defined, check implementation documentation.</i>
+ *
+ * \par Thread-safety
+ *   Service clients are thread-safe objects, and so are all operations on them except for
+ *   finalization.
+ *   Therefore, it is safe to get the unique identifier from the same client concurrently.
+ *   However, access to the gid is not synchronized.
+ *   It is not safe to read or write `gid` while rmw_get_gid_for_client() uses it.
+ *
+ * \pre Given `client` must be a valid service client, as returned by rmw_create_client().
+ *
+ * \param[in] client Service client to get a gid from.
+ * \param[out] gid Service client's unique identifier, populated on success
+ *   but left unchanged on failure.
+ * \return `RMW_RET_OK` if successful, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `publisher` is NULL, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `gid` is NULL, or
+ * \return `RMW_RET_INCORRECT_RMW_IMPLEMENTATION` if the `client` implementation
+ *   identifier does not match this implementation, or
+ * \return `RMW_RET_ERROR` if an unspecified error occurs.
+ */
+RMW_PUBLIC
+RMW_WARN_UNUSED
+rmw_ret_t
+rmw_get_gid_for_client(const rmw_client_t * client, rmw_gid_t * gid);
+
 /// Check if two unique identifiers (gids) are equal.
 /**
  * <hr>
@@ -3082,10 +3118,11 @@ rmw_set_log_severity(rmw_log_severity_t severity);
  * at any time.
  *
  * \param[in] subscription The subscription on which to set the callback
- * \param[in] callback The callback to be called when new messages arrive
+ * \param[in] callback The callback to be called when new messages arrive,
+ *   can be NULL to clear the registered callback
  * \param[in] user_data Given to the callback when called later, may be NULL
  * \return `RMW_RET_OK` if successful, or
- * \return `RMW_RET_INVALID_ARGUMENT` if `subscription` or `callback` is NULL, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `subscription` is NULL, or
  * \return `RMW_RET_UNSUPPORTED` if the API is not implemented in the dds implementation
  */
 RMW_PUBLIC
@@ -3116,10 +3153,11 @@ rmw_subscription_set_on_new_message_callback(
  * at any time.
  *
  * \param[in] service The service on which to set the callback
- * \param[in] callback The callback to be called when new requests arrive
+ * \param[in] callback The callback to be called when new requests arrive,
+ *   can be NULL to clear the registered callback
  * \param[in] user_data Given to the callback when called later, may be NULL
  * \return `RMW_RET_OK` if callback was set to the listener, or
- * \return `RMW_RET_INVALID_ARGUMENT` if `service` or `callback` is NULL, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `service` is NULL, or
  * \return `RMW_RET_UNSUPPORTED` if the API is not implemented in the dds implementation
  */
 RMW_PUBLIC
@@ -3150,10 +3188,11 @@ rmw_service_set_on_new_request_callback(
  * at any time.
  *
  * \param[in] client The client on which to set the callback
- * \param[in] callback The callback to be called when new responses arrive
+ * \param[in] callback The callback to be called when new responses arrive,
+ *   can be NULL to clear the registered callback
  * \param[in] user_data Given to the callback when called later, may be NULL
  * \return `RMW_RET_OK` if callback was set to the listener, or
- * \return `RMW_RET_INVALID_ARGUMENT` if `client` or `callback` is NULL, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `client` is NULL, or
  * \return `RMW_RET_UNSUPPORTED` if the API is not implemented in the dds implementation
  */
 RMW_PUBLIC
@@ -3188,10 +3227,11 @@ rmw_client_set_on_new_response_callback(
  * at any time.
  *
  * \param[in] event The event on which to set the callback
- * \param[in] callback The callback to be called when new events occur
+ * \param[in] callback The callback to be called when new events occur,
+ *   can be NULL to clear the registered callback
  * \param[in] user_data Given to the callback when called later, may be NULL
  * \return `RMW_RET_OK` if callback was set to the listener, or
- * \return `RMW_RET_INVALID_ARGUMENT` if `event` or `callback` is NULL, or
+ * \return `RMW_RET_INVALID_ARGUMENT` if `event` is NULL, or
  * \return `RMW_RET_UNSUPPORTED` if the API is not implemented in the dds implementation
  */
 RMW_PUBLIC
