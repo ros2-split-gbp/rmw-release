@@ -2,10 +2,40 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-6.1.1 (2022-11-07)
+7.0.0 (2023-02-13)
 ------------------
-* callback can be NULL to clear in Listener APIs. (`#332 <https://github.com/ros2/rmw/issues/332>`_) (`#333 <https://github.com/ros2/rmw/issues/333>`_)
-* Contributors: mergify[bot]
+* Add rmw count clients, services (`#334 <https://github.com/ros2/rmw/issues/334>`_)
+* make writer_guid uint8_t[] instead of int8_t for consistency with rmw_gid_t (`#329 <https://github.com/ros2/rmw/issues/329>`_)
+* Update rmw to C++17. (`#346 <https://github.com/ros2/rmw/issues/346>`_)
+* Reduce GID storage to 16 bytes. (`#345 <https://github.com/ros2/rmw/issues/345>`_)
+* Move the RMW_CHECK_TYPE_IDENTIFIERS_MATCH macro to a C header. (`#343 <https://github.com/ros2/rmw/issues/343>`_)
+* [rolling] Update maintainers - 2022-11-07 (`#337 <https://github.com/ros2/rmw/issues/337>`_)
+* Contributors: Audrow Nash, Brian, Chris Lalancette, Minju, Lee
+
+6.4.0 (2022-11-02)
+------------------
+* Remove unused test_loaned_message_sequence.cpp (`#336 <https://github.com/ros2/rmw/issues/336>`_)
+* callback can be NULL to clear in Listener APIs. (`#332 <https://github.com/ros2/rmw/issues/332>`_)
+* Add rmw_get_gid_for_client method (`#327 <https://github.com/ros2/rmw/issues/327>`_)
+* Contributors: Brian, Nikolai Morin, Tomoya Fujita
+
+6.3.1 (2022-09-13)
+------------------
+
+6.3.0 (2022-05-03)
+------------------
+* Add 'best available' QoS policies (`#320 <https://github.com/ros2/rmw/issues/320>`_)
+  The best available policy should select the highest level of service for the QoS setting while matching with the majority of endpoints.
+  For example, in the case of a DDS middleware subscription, this means:
+  * Prefer reliable reliability if all existing publishers on the same topic are reliable, otherwise use best effort.
+  * Prefer transient local durability if all existing publishers on the same topic are transient local, otherwise use volatile.
+  * Prefer manual by topic liveliness if all existing publishers on the same topic are manual by topic, otherwise use automatic.
+  * Use a deadline that is equal to the largest deadline of existing publishers on the same topic.
+  * Use a liveliness lease duration that is equal to the largest lease duration of existing publishers on the same topic.
+* Contributors: Jacob Perron
+
+6.2.0 (2022-04-29)
+------------------
 
 6.1.0 (2022-03-25)
 ------------------
@@ -113,7 +143,7 @@ Changelog for package rmw
 1.1.0 (2020-06-18)
 ------------------
 * Add message lost subscription event (`#232 <https://github.com/ros2/rmw/issues/232>`_)
-* Move statuses definitions to rmw/events_statuses/*.h (`#232 <https://github.com/ros2/rmw/issues/232>`_)
+* Move statuses definitions to rmw/events_statuses/ (`#232 <https://github.com/ros2/rmw/issues/232>`_)
 * Increase rmw testing coverage above 95% (`#238 <https://github.com/ros2/rmw/issues/238>`_)
 * Handle zero-length names_and_types properly (`#239 <https://github.com/ros2/rmw/issues/239>`_)
 * Add missing RMW_PUBLIC to security_options_set_root_path (`#236 <https://github.com/ros2/rmw/issues/236>`_)
