@@ -2,6 +2,11 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+7.0.1 (2023-02-24)
+------------------
+* Fix rmw->rwm typo (`#347 <https://github.com/ros2/rmw/issues/347>`_)
+* Contributors: Emerson Knapp
+
 7.0.0 (2023-02-13)
 ------------------
 * Add rmw count clients, services (`#334 <https://github.com/ros2/rmw/issues/334>`_)
