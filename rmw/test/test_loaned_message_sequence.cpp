@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RMW__EVENTS_STATUSES__EVENTS_STATUSES_H_
-#define RMW__EVENTS_STATUSES__EVENTS_STATUSES_H_
+#include "gmock/gmock.h"
+#include "rmw/loaned_message_sequence.h"
 
-#include "rmw/events_statuses/incompatible_qos.h"
-#include "rmw/events_statuses/liveliness_changed.h"
-#include "rmw/events_statuses/liveliness_lost.h"
-#include "rmw/events_statuses/message_lost.h"
-#include "rmw/events_statuses/offered_deadline_missed.h"
-#include "rmw/events_statuses/requested_deadline_missed.h"
-
-#endif  // RMW__EVENTS_STATUSES__EVENTS_STATUSES_H_
+TEST(rmw_loaned_message_sequence, get_zero_init)
+{
+  rmw_loaned_message_sequence_t sequence = rmw_get_zero_initialized_loaned_message_sequence();
+  EXPECT_EQ(sequence.message_sequence, nullptr);
+  EXPECT_EQ(sequence.size, 0u);
+  EXPECT_EQ(sequence.capacity, 0u);
+}

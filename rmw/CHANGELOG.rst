@@ -2,159 +2,73 @@
 Changelog for package rmw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-7.0.1 (2023-02-24)
+1.0.4 (2023-03-16)
 ------------------
-* Fix rmw->rwm typo (`#347 <https://github.com/ros2/rmw/issues/347>`_)
-* Contributors: Emerson Knapp
+* Correct parameter names to match documentation (`#250 <https://github.com/ros2/rmw/issues/250>`_) (`#322 <https://github.com/ros2/rmw/issues/322>`_)
+* Contributors: mergify[bot], Geoffrey Biggs
 
-7.0.0 (2023-02-13)
+1.0.3 (2021-04-14)
 ------------------
-* Add rmw count clients, services (`#334 <https://github.com/ros2/rmw/issues/334>`_)
-* make writer_guid uint8_t[] instead of int8_t for consistency with rmw_gid_t (`#329 <https://github.com/ros2/rmw/issues/329>`_)
-* Update rmw to C++17. (`#346 <https://github.com/ros2/rmw/issues/346>`_)
-* Reduce GID storage to 16 bytes. (`#345 <https://github.com/ros2/rmw/issues/345>`_)
-* Move the RMW_CHECK_TYPE_IDENTIFIERS_MATCH macro to a C header. (`#343 <https://github.com/ros2/rmw/issues/343>`_)
-* [rolling] Update maintainers - 2022-11-07 (`#337 <https://github.com/ros2/rmw/issues/337>`_)
-* Contributors: Audrow Nash, Brian, Chris Lalancette, Minju, Lee
+* Update quality declaration links (re: `ros2/docs.ros2.org#52 <https://github.com/ros2/docs.ros2.org/issues/52>`_) (`#306 <https://github.com/ros2/rmw/issues/306>`_)
+* Remove extra link (`#292 <https://github.com/ros2/rmw/issues/292>`_)
+* Update QD to QL 1 (`#291 <https://github.com/ros2/rmw/issues/291>`_)
+* Contributors: Alejandro Hernández Cordero, Simon Honigmann, Stephen Brawner
 
-6.4.0 (2022-11-02)
+1.0.2 (2020-10-13)
 ------------------
-* Remove unused test_loaned_message_sequence.cpp (`#336 <https://github.com/ros2/rmw/issues/336>`_)
-* callback can be NULL to clear in Listener APIs. (`#332 <https://github.com/ros2/rmw/issues/332>`_)
-* Add rmw_get_gid_for_client method (`#327 <https://github.com/ros2/rmw/issues/327>`_)
-* Contributors: Brian, Nikolai Morin, Tomoya Fujita
-
-6.3.1 (2022-09-13)
-------------------
-
-6.3.0 (2022-05-03)
-------------------
-* Add 'best available' QoS policies (`#320 <https://github.com/ros2/rmw/issues/320>`_)
-  The best available policy should select the highest level of service for the QoS setting while matching with the majority of endpoints.
-  For example, in the case of a DDS middleware subscription, this means:
-  * Prefer reliable reliability if all existing publishers on the same topic are reliable, otherwise use best effort.
-  * Prefer transient local durability if all existing publishers on the same topic are transient local, otherwise use volatile.
-  * Prefer manual by topic liveliness if all existing publishers on the same topic are manual by topic, otherwise use automatic.
-  * Use a deadline that is equal to the largest deadline of existing publishers on the same topic.
-  * Use a liveliness lease duration that is equal to the largest lease duration of existing publishers on the same topic.
-* Contributors: Jacob Perron
-
-6.2.0 (2022-04-29)
-------------------
-
-6.1.0 (2022-03-25)
-------------------
-* Add content filtered topics support. (`#302 <https://github.com/ros2/rmw/issues/302>`_)
-* Add sequence numbers to rmw_message_info_t. (`#318 <https://github.com/ros2/rmw/issues/318>`_)
-* Add rmw_feature_supported(). (`#318 <https://github.com/ros2/rmw/issues/318>`_)
-* Contributors: Chen Lihui, Ivan Santiago Paunovic
-
-6.0.0 (2022-03-01)
-------------------
-* Add EventsExecutor (`#286 <https://github.com/ros2/rmw/issues/286>`_)
-* Document that rmw_wait() SHOULD use a monotonic clock (`#316 <https://github.com/ros2/rmw/issues/316>`_)
-* Install headers to include/${PROJECT_NAME} (`#317 <https://github.com/ros2/rmw/issues/317>`_)
-* Update rmw_server_is_available() API documentation. (`#277 <https://github.com/ros2/rmw/issues/277>`_)
-* Contributors: Ivan Santiago Paunovic, Michel Hidalgo, Shane Loretz, iRobot ROS
-
-5.1.0 (2021-11-19)
-------------------
-* Add client/service QoS getters. (`#314 <https://github.com/ros2/rmw/issues/314>`_)
-* Contributors: mauropasse
-
-5.0.0 (2021-09-15)
-------------------
-* Fix up documentation build for rmw when using rosdoc2 (`#313 <https://github.com/ros2/rmw/issues/313>`_)
-* Fix up errors in doxygen documentation (`#311 <https://github.com/ros2/rmw/issues/311>`_)
-* Fix copy-paste error in API doc for rmw_get_gid_for_publisher (`#310 <https://github.com/ros2/rmw/issues/310>`_)
-* Contributors: Chris Lalancette, Christophe Bedard, Michel Hidalgo
-
-4.0.0 (2021-06-02)
-------------------
-* Add rmw_publisher_wait_for_all_acked support. (`#296 <https://github.com/ros2/rmw/issues/296>`_)
-* Contributors: Barry Xu
-
-3.3.1 (2021-04-26)
-------------------
-* Document which QoS policies are correctly read by rmw_get_publishers/subscriptions_info_by_topic (`#308 <https://github.com/ros2/rmw/issues/308>`_)
-* Contributors: Ivan Santiago Paunovic
-
-3.3.0 (2021-04-06)
-------------------
-* Unique network flows (`#294 <https://github.com/ros2/rmw/issues/294>`_)
-* updating quality declaration links (re: `ros2/docs.ros2.org#52 <https://github.com/ros2/docs.ros2.org/issues/52>`_) (`#307 <https://github.com/ros2/rmw/issues/307>`_)
-* Contributors: Ananya Muddukrishna, shonigmann
-
-3.2.0 (2021-03-11)
-------------------
-* Introduce RMW_DURATION_INFINITE constant and API return value promise (`#301 <https://github.com/ros2/rmw/issues/301>`_)
-* Contributors: Emerson Knapp
-
-3.1.0 (2021-02-25)
-------------------
-* Add declaration for function to check QoS profile compatibility (`#299 <https://github.com/ros2/rmw/issues/299>`_)
-* Update the rmw_take_sequence documentation. (`#297 <https://github.com/ros2/rmw/issues/297>`_)
-* Contributors: Chris Lalancette, Jacob Perron
-
-3.0.0 (2021-01-25)
-------------------
-
-2.2.1 (2020-12-10)
-------------------
-* Update rmw QD to QL 1 (`#289 <https://github.com/ros2/rmw/issues/289>`_)
-* Contributors: Stephen Brawner
-
-2.2.0 (2020-11-04)
-------------------
-* Extend rmw_qos_policy_kind_t, add functions to convert it to/from a string (`#285 <https://github.com/ros2/rmw/issues/285>`_)
-* Add functions to convert between qos policy values and strings (`#284 <https://github.com/ros2/rmw/issues/284>`_)
-* Update maintainers (`#282 <https://github.com/ros2/rmw/issues/282>`_)
-* Update service request/response API documentation (`#279 <https://github.com/ros2/rmw/issues/279>`_)
-* Update rmw_get_serialized_message_size docblock (`#281 <https://github.com/ros2/rmw/issues/281>`_)
-* Update rmw_service_server_is_available doc (`#280 <https://github.com/ros2/rmw/issues/280>`_)
-* Update wait and wait sets' API documentation (`#275 <https://github.com/ros2/rmw/issues/275>`_)
-* Update graph API documentation (`#272 <https://github.com/ros2/rmw/issues/272>`_)
-* Update service server/client creation/destruction API documentation. (`#276 <https://github.com/ros2/rmw/issues/276>`_)
-* Update rmw\_*_*_allocation return values (`#278 <https://github.com/ros2/rmw/issues/278>`_)
-* Update gid API documentation (`#274 <https://github.com/ros2/rmw/issues/274>`_)
-* Do not link against pthread on Android (`#267 <https://github.com/ros2/rmw/issues/267>`_)
-* Update taking API documentation (`#271 <https://github.com/ros2/rmw/issues/271>`_)
-* Update publishing API documentation (`#270 <https://github.com/ros2/rmw/issues/270>`_)
-* Add fault injection macros for use in other packages (`#254 <https://github.com/ros2/rmw/issues/254>`_)
-* Add bad_alloc return to topic_endpoint_info functions (`#269 <https://github.com/ros2/rmw/issues/269>`_)
-* Update publisher/subscription matched count API documentation (`#262 <https://github.com/ros2/rmw/issues/262>`_)
-* Update publisher/subscription QoS query API documentation (`#263 <https://github.com/ros2/rmw/issues/263>`_)
-* Extend rmw_serialized_message_t tests (`#261 <https://github.com/ros2/rmw/issues/261>`_)
-* Update serialization/deserialization API documentation (`#258 <https://github.com/ros2/rmw/issues/258>`_)
-* Update subscription API documentation (`#256 <https://github.com/ros2/rmw/issues/256>`_)
-* Update publisher creation/destruction API documentation (`#252 <https://github.com/ros2/rmw/issues/252>`_)
-* Contributors: Alejandro Hernández Cordero, Ivan Santiago Paunovic, Jacob Perron, Michel Hidalgo, brawner
-
-2.1.0 (2020-07-22)
-------------------
-* Add actual domain id to rmw_context_t (`#251 <https://github.com/ros2/rmw/issues/251>`_)
-* Update node creation/destruction API documentation. (`#249 <https://github.com/ros2/rmw/issues/249>`_)
-* Correct parameter names to match documentation (`#250 <https://github.com/ros2/rmw/issues/250>`_)
-* Contributors: Geoffrey Biggs, Ivan Santiago Paunovic, Michel Hidalgo
-
-2.0.0 (2020-07-08)
-------------------
-* Remove domain_id and localhost_only from node API (`#248 <https://github.com/ros2/rmw/issues/248>`_)
-* Require enclave upon rmw_init() call. (`#247 <https://github.com/ros2/rmw/issues/247>`_)
-* Update init/shutdown API documentation. (`#243 <https://github.com/ros2/rmw/issues/243>`_)
-* Update init options API documentation. (`#244 <https://github.com/ros2/rmw/issues/244>`_)
-* Contributors: Ivan Santiago Paunovic, Michel Hidalgo
-
-1.1.0 (2020-06-18)
-------------------
-* Add message lost subscription event (`#232 <https://github.com/ros2/rmw/issues/232>`_)
-* Move statuses definitions to rmw/events_statuses/ (`#232 <https://github.com/ros2/rmw/issues/232>`_)
-* Increase rmw testing coverage above 95% (`#238 <https://github.com/ros2/rmw/issues/238>`_)
-* Handle zero-length names_and_types properly (`#239 <https://github.com/ros2/rmw/issues/239>`_)
-* Add missing RMW_PUBLIC to security_options_set_root_path (`#236 <https://github.com/ros2/rmw/issues/236>`_)
-* Update Quality Declaration for QL 2 (`#233 <https://github.com/ros2/rmw/issues/233>`_)
-* Add Security Vulnerability Policy pointing to REP-2006. (`#230 <https://github.com/ros2/rmw/issues/230>`_)
-* Contributors: Chris Lalancette, Ivan Santiago Paunovic, Karsten Knese, Scott K Logan, Stephen Brawner, brawner
+* Update service request/response API documentation. (`#279 <https://github.com/ros2/rmw//issues/279>`_)
+* Update rmw_get_serialized_message_size docblock (`#281 <https://github.com/ros2/rmw//issues/281>`_)
+* Update rmw_service_server_is_available doc (`#280 <https://github.com/ros2/rmw//issues/280>`_)
+* Update wait and wait sets' API documentation. (`#275 <https://github.com/ros2/rmw//issues/275>`_)
+* Update graph API documentation. (`#272 <https://github.com/ros2/rmw//issues/272>`_)
+* Update service server/client creation/destruction API documentation. (`#276 <https://github.com/ros2/rmw//issues/276>`_)
+* update rmw\_*_*_allocation returns (`#278 <https://github.com/ros2/rmw//issues/278>`_)
+* Update gid API documentation. (`#274 <https://github.com/ros2/rmw//issues/274>`_)
+  Namely, rmw_get_gid_for_publisher() and rmw_compare_gids_equal().
+* Update taking API documentation. (`#271 <https://github.com/ros2/rmw//issues/271>`_)
+* Update publishing API documentation. (`#270 <https://github.com/ros2/rmw//issues/270>`_)
+* Add fault injection macros for use in other packages (`#254 <https://github.com/ros2/rmw//issues/254>`_)
+  * Add fault injection macros for use in other packages
+  * cxx/c flags
+  * Address feedback
+  * lint cmake
+* Add bad_alloc return to topic_endpoint_info functions (`#269 <https://github.com/ros2/rmw//issues/269>`_)
+* Update publisher/subscription matched count API documentation. (`#262 <https://github.com/ros2/rmw//issues/262>`_)
+* Update publisher/subscription QoS query API documentation. (`#263 <https://github.com/ros2/rmw//issues/263>`_)
+  Follow-up after 0176872b10ff502ae34fa3eef5e900145f18b0b3.
+* Extend rmw_serialized_message_t tests. (`#261 <https://github.com/ros2/rmw//issues/261>`_)
+* Update serialization/deserialization API documentation. (`#258 <https://github.com/ros2/rmw//issues/258>`_)
+  * Update rmw\_(de)serialize() API documentation.
+  * Add rmw_serialize_message_t API documentation.
+* Update subscription API documentation (`#256 <https://github.com/ros2/rmw//issues/256>`_)
+  * Update subscription creation/destruction API documentation.
+  * Update subscription QoS querying API documentation.
+* Update publisher creation/destruction API documentation. (`#252 <https://github.com/ros2/rmw//issues/252>`_)
+* Update node creation/destruction API documentation. (`#249 <https://github.com/ros2/rmw//issues/249>`_)
+* Require enclave upon rmw_init() call. (`#247 <https://github.com/ros2/rmw//issues/247>`_)
+* Update init/shutdown API documentation. (`#243 <https://github.com/ros2/rmw//issues/243>`_)
+* Update init options API documentation. (`#244 <https://github.com/ros2/rmw//issues/244>`_)
+* remove double empty lines (`#240 <https://github.com/ros2/rmw//issues/240>`_)
+  as per title
+* Update QD
+* Rebasing and adding time_bomb_allocator
+* fix class name
+* Add test types
+* Increase rmw testing coverage
+* Handle zero-length names_and_types properly (`#239 <https://github.com/ros2/rmw//issues/239>`_)
+  from malloc(3):
+* Add unit tests for set_root_path
+* RMW_PUBLIC to security_options_set_root_path
+* Remove redundant check (`#237 <https://github.com/ros2/rmw//issues/237>`_)
+* Do not link against pthread on Android (`#259 <https://github.com/ros2/rmw//issues/259>`_) (`#268 <https://github.com/ros2/rmw//issues/268>`_)
+  Co-authored-by: Esteve Fernandez <esteve@apache.org>
+* Fix rmw_names_and_types_fini test to address issue `#234 <https://github.com/ros2/rmw//issues/234>`_ (`#235 <https://github.com/ros2/rmw//issues/235>`_) (`#265 <https://github.com/ros2/rmw//issues/265>`_)
+  * Fix rmw_names_and_types_fini test to address issue `#234 <https://github.com/ros2/rmw//issues/234>`_
+  * Switch explicit size with variable
+  * ASSERT_EQ
+  Co-authored-by: brawner <brawner@gmail.com>
+* Add Security Vulnerability Policy pointing to REP-2006. (`#230 <https://github.com/ros2/rmw//issues/230>`_)
+* Contributors: Alejandro Hernández Cordero, Chris Lalancette, Jacob Perron, Karsten Knese, Michel Hidalgo, Scott K Logan, Stephen Brawner, brawner
 
 1.0.1 (2020-05-19)
 ------------------

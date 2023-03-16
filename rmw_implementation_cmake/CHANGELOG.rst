@@ -2,80 +2,13 @@
 Changelog for package rmw_implementation_cmake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-7.0.1 (2023-02-24)
+1.0.4 (2023-03-16)
 ------------------
 
-7.0.0 (2023-02-13)
+1.0.3 (2021-04-14)
 ------------------
-* [rolling] Update maintainers - 2022-11-07 (`#337 <https://github.com/ros2/rmw/issues/337>`_)
-* Contributors: Audrow Nash
-
-6.4.0 (2022-11-02)
-------------------
-
-6.3.1 (2022-09-13)
-------------------
-
-6.3.0 (2022-05-03)
-------------------
-
-6.2.0 (2022-04-29)
-------------------
-
-6.1.0 (2022-03-25)
-------------------
-
-6.0.0 (2022-03-01)
-------------------
-* Use FastDDS as default DDS (`#315 <https://github.com/ros2/rmw/issues/315>`_)
-* Contributors: Audrow Nash
-
-5.1.0 (2021-11-19)
-------------------
-
-5.0.0 (2021-09-15)
-------------------
-
-4.0.0 (2021-06-02)
-------------------
-
-3.3.1 (2021-04-26)
-------------------
-
-3.3.0 (2021-04-06)
-------------------
-
-3.2.0 (2021-03-11)
-------------------
-
-3.1.0 (2021-02-25)
-------------------
-* Shorten some excessively long lines of CMake (`#300 <https://github.com/ros2/rmw/issues/300>`_)
-* Contributors: Scott K Logan
-
-3.0.0 (2021-01-25)
-------------------
-* Change default RMW vendor to CycloneDDS. (`#293 <https://github.com/ros2/rmw/issues/293>`_)
-* Contributors: Chris Lalancette
-
-2.2.1 (2020-12-10)
-------------------
-* Update rmw QD to QL 1 (`#289 <https://github.com/ros2/rmw/issues/289>`_)
+* Update QD to QL 1 (`#291 <https://github.com/ros2/rmw/issues/291>`_)
 * Contributors: Stephen Brawner
-
-2.2.0 (2020-11-04)
-------------------
-* Update maintainers (`#282 <https://github.com/ros2/rmw/issues/282>`_)
-* Contributors: Ivan Santiago Paunovic
-
-2.1.0 (2020-07-22)
-------------------
-
-2.0.0 (2020-07-08)
-------------------
-
-1.1.0 (2020-06-18)
-------------------
 
 1.0.1 (2020-05-19)
 ------------------

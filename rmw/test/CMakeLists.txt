@@ -75,15 +75,6 @@ if(TARGET test_publisher_options)
   target_link_libraries(test_publisher_options ${PROJECT_NAME})
 endif()
 
-ament_add_gtest(test_qos_string_conversions
-test_qos_string_conversions.cpp
-  # Append the directory of librmw so it is found at test time.
-  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-)
-if(TARGET test_qos_string_conversions)
-  target_link_libraries(test_qos_string_conversions ${PROJECT_NAME})
-endif()
-
 ament_add_gmock(test_sanity_checks
   test_sanity_checks.cpp
   # Append the directory of librmw so it is found at test time.
@@ -119,15 +110,6 @@ ament_add_gmock(test_subscription_options
 )
 if(TARGET test_subscription_options)
   target_link_libraries(test_subscription_options ${PROJECT_NAME})
-endif()
-
-ament_add_gmock(test_time
-  test_time.cpp
-  # Append the directory of librmw so it is found at test time.
-  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-)
-if(TARGET test_time)
-  target_link_libraries(test_time ${PROJECT_NAME})
 endif()
 
 ament_add_gmock(test_types
@@ -190,33 +172,4 @@ ament_add_gmock(test_topic_endpoint_info
 if(TARGET test_topic_endpoint_info)
   target_link_libraries(test_topic_endpoint_info ${PROJECT_NAME}
   osrf_testing_tools_cpp::memory_tools)
-endif()
-
-ament_add_gmock(test_network_flow_endpoint
-  test_network_flow_endpoint.cpp
-  # Append the directory of librmw so it is found at test time.
-  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-)
-if(TARGET test_network_flow_endpoint)
-  target_link_libraries(test_network_flow_endpoint ${PROJECT_NAME}
-  osrf_testing_tools_cpp::memory_tools)
-endif()
-
-ament_add_gmock(test_network_flow_endpoint_array
-  test_network_flow_endpoint_array.cpp
-  # Append the directory of librmw so it is found at test time.
-  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-)
-if(TARGET test_network_flow_endpoint_array)
-  target_link_libraries(test_network_flow_endpoint_array ${PROJECT_NAME}
-  osrf_testing_tools_cpp::memory_tools)
-endif()
-
-ament_add_gmock(test_subscription_content_filter_options
-  test_subscription_content_filter_options.cpp
-  # Append the directory of librmw so it is found at test time.
-  APPEND_LIBRARY_DIRS "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-)
-if(TARGET test_subscription_content_filter_options)
-  target_link_libraries(test_subscription_content_filter_options ${PROJECT_NAME})
 endif()
