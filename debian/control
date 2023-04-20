@@ -1,0 +1,12 @@
+Source: ros-iron-rmw
+Section: misc
+Priority: optional
+Maintainer: Brandon Ong <brandon@openrobotics.org>
+Build-Depends: debhelper (>= 9.0.0), ros-iron-ament-cmake-gmock <!nocheck>, ros-iron-ament-cmake-ros, ros-iron-ament-cmake-version, ros-iron-ament-lint-auto <!nocheck>, ros-iron-ament-lint-common <!nocheck>, ros-iron-osrf-testing-tools-cpp <!nocheck>, ros-iron-rcutils, ros-iron-rosidl-dynamic-typesupport, ros-iron-rosidl-runtime-c, ros-iron-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-iron-rmw
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-iron-rcutils, ros-iron-rosidl-dynamic-typesupport, ros-iron-rosidl-runtime-c, ros-iron-ros-workspace
+Description: Contains the ROS middleware API.
