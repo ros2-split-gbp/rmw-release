@@ -1,0 +1,174 @@
+ros-rolling-rmw-implementation-cmake (7.1.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 12 Apr 2023 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (7.0.1-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Fri, 24 Feb 2023 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (7.0.0-1bullseye) bullseye; urgency=high
+
+  * [rolling] Update maintainers - 2022-11-07 (#337 <https://github.com/ros2/rmw/issues/337>)
+  * Contributors: Audrow Nash
+
+ -- Brandon Ong <brandon@openrobotics.org>  Mon, 13 Feb 2023 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.4.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 02 Nov 2022 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.3.1-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 13 Sep 2022 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.3.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 03 May 2022 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.2.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Fri, 29 Apr 2022 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.1.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Fri, 25 Mar 2022 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (6.0.0-1bullseye) bullseye; urgency=high
+
+  * Use FastDDS as default DDS (#315 <https://github.com/ros2/rmw/issues/315>)
+  * Contributors: Audrow Nash
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 01 Mar 2022 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (5.1.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Fri, 19 Nov 2021 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (5.0.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 15 Sep 2021 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (4.0.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 02 Jun 2021 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (3.3.1-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Mon, 26 Apr 2021 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (3.3.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 06 Apr 2021 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (3.2.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Thu, 11 Mar 2021 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (3.1.0-1bullseye) bullseye; urgency=high
+
+  * Shorten some excessively long lines of CMake (#300 <https://github.com/ros2/rmw/issues/300>)
+  * Contributors: Scott K Logan
+
+ -- Brandon Ong <brandon@openrobotics.org>  Thu, 25 Feb 2021 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (3.0.0-1bullseye) bullseye; urgency=high
+
+  * Change default RMW vendor to CycloneDDS. (#293 <https://github.com/ros2/rmw/issues/293>)
+  * Contributors: Chris Lalancette
+
+ -- Brandon Ong <brandon@openrobotics.org>  Mon, 25 Jan 2021 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (2.2.1-1bullseye) bullseye; urgency=high
+
+  * Update rmw QD to QL 1 (#289 <https://github.com/ros2/rmw/issues/289>)
+  * Contributors: Stephen Brawner
+
+ -- Brandon Ong <brandon@openrobotics.org>  Thu, 10 Dec 2020 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (2.2.0-1bullseye) bullseye; urgency=high
+
+  * Update maintainers (#282 <https://github.com/ros2/rmw/issues/282>)
+  * Contributors: Ivan Santiago Paunovic
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 04 Nov 2020 08:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (2.1.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 22 Jul 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (2.0.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 08 Jul 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (1.1.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Thu, 18 Jun 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (1.0.1-1bullseye) bullseye; urgency=high
+
+  * Update Quality Declaration to reflect 1.0 (#228 <https://github.com/ros2/rmw/issues/228>)
+  * Contributors: Stephen Brawner
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 19 May 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (1.0.0-1bullseye) bullseye; urgency=high
+
+  * Improved Quality declarations (#225 <https://github.com/ros2/rmw/issues/225>)
+  * Quality declarations for rmw and rmw_implementation_cmake (#205 <https://github.com/ros2/rmw/issues/205>)
+  * Contributors: Alejandro Hernández Cordero, Stephen Brawner
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 12 May 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (0.9.0-1bullseye) bullseye; urgency=high
+
+  * Adding doxygen documentation and READMEs to packages (#204 <https://github.com/ros2/rmw/issues/204>)
+  * Add option to filter available RMW implementations (#199 <https://github.com/ros2/rmw/issues/199>)
+  * Contributors: Dirk Thomas, Stephen Brawner
+
+ -- Brandon Ong <brandon@openrobotics.org>  Fri, 24 Apr 2020 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (0.8.1-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Wed, 23 Oct 2019 07:00:00 -0000
+
+ros-rolling-rmw-implementation-cmake (0.8.0-1bullseye) bullseye; urgency=high
+
+
+
+ -- Brandon Ong <brandon@openrobotics.org>  Tue, 24 Sep 2019 07:00:00 -0000
+
+
